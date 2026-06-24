@@ -484,7 +484,7 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 900px) {
     .layout-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 0;
     }
 
     .sidepanel {
@@ -495,22 +495,33 @@ body.modal-open { overflow: hidden; }
         border-left: none;
         border-right: none;
         box-shadow: none;
-        margin: -1.5rem -2rem 0;
-        border-radius: 0;
-        padding: 16px 20px;
+        margin: 0 -1rem;
+        padding: 14px 1rem;
+    }
+
+    .sidepanel .data-source {
+        font-size: 0.75rem;
+        padding: 8px 12px;
     }
 
     .sidepanel .insights-container {
         flex-direction: row;
         gap: 10px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         padding-bottom: 6px;
+        scroll-snap-type: x proximity;
     }
 
     .insights-container .insight-card {
         min-width: 180px;
         flex: 0 0 auto;
         padding: 14px 16px;
+        scroll-snap-align: start;
+    }
+
+    .insight-card::before {
+        width: 3px;
     }
 
     .insight-card h2 {
@@ -525,15 +536,16 @@ body.modal-open { overflow: hidden; }
         border-radius: 0;
         border-left: none;
         border-right: none;
-        margin: 0 -2rem;
-        padding: 16px 20px;
+        margin: 0 -1rem;
+        padding: 14px 1rem;
     }
 
     .stats-card {
         border-radius: 0;
         border-left: none;
         border-right: none;
-        margin: 0 -2rem;
+        margin: 0 -1rem;
+        padding: 14px 1rem;
     }
 
     #mapa {
@@ -558,21 +570,11 @@ body.modal-open { overflow: hidden; }
 
     .report-title {
         font-size: 1.3rem;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
 
     .content {
         padding: 1rem 1rem 3rem 1rem;
-    }
-
-    .sidepanel {
-        margin: -1rem -1rem 0;
-        border-radius: 0;
-    }
-
-    .map-container, .stats-card {
-        margin: 0 -1rem;
-        border-radius: 0;
     }
 
     .stats-table th:nth-child(2),
@@ -586,16 +588,80 @@ body.modal-open { overflow: hidden; }
         display: none;
     }
 
-    .stats-table th:nth-child(1), .stats-table td:nth-child(1) { width: auto; }
-    .stats-table th:nth-child(3), .stats-table td:nth-child(3) { width: auto; }
+    .stats-table th:nth-child(1),
+    .stats-table td:nth-child(1) { width: auto; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; }
+    .stats-table th:nth-child(3),
+    .stats-table td:nth-child(3) { width: auto; }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 
     .nota-expansion {
         font-size: 0.75rem;
         padding: 5px 10px;
     }
+
+    .modal-overlay {
+        padding: 10px;
+        align-items: flex-end;
+    }
+
+    .modal-box {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-body {
+        max-height: none;
+        flex: 1;
+    }
+
+    .modal-header {
+        flex-shrink: 0;
+    }
+
+    .departamento-header {
+        min-height: 44px;
+    }
+
+    .sectores-table th,
+    .sectores-table td {
+        padding: 10px 8px;
+        font-size: 0.78rem;
+    }
+
+    .source-table th,
+    .source-table td {
+        padding: 6px 8px;
+        font-size: 0.78rem;
+    }
 }
 
 @media (max-width: 600px) {
+    .content {
+        padding: 0.75rem 0.75rem 2.5rem 0.75rem;
+    }
+
+    .sidepanel {
+        margin: 0 -0.75rem;
+        padding: 12px 0.75rem;
+    }
+
+    .map-container {
+        margin: 0 -0.75rem;
+        padding: 12px 0.75rem;
+    }
+
+    .stats-card {
+        margin: 0 -0.75rem;
+        padding: 12px 0.75rem;
+    }
+
     .sidepanel .insights-container {
         gap: 8px;
     }
@@ -627,7 +693,58 @@ body.modal-open { overflow: hidden; }
     }
 
     .stats-table th, .stats-table td {
-        padding: 8px;
+        padding: 8px 6px;
+    }
+
+    .chart-header h3 {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .content {
+        padding: 0.5rem 0.5rem 2rem 0.5rem;
+    }
+
+    .sidepanel {
+        margin: 0 -0.5rem;
+        padding: 10px 0.5rem;
+    }
+
+    .map-container {
+        margin: 0 -0.5rem;
+        padding: 10px 0.5rem;
+    }
+
+    .stats-card {
+        margin: 0 -0.5rem;
+        padding: 10px 0.5rem;
+    }
+
+    .insights-container .insight-card {
+        min-width: 130px;
+        padding: 10px 12px;
+    }
+
+    .fecha-valor, .precio-valor {
+        font-size: 0.9rem;
+    }
+
+    .insight-card h2 {
+        font-size: 0.6rem;
+    }
+
+    .report-title {
+        font-size: 1.05rem;
+    }
+
+    #mapa {
+        height: 280px;
+    }
+
+    .stats-table th, .stats-table td {
+        padding: 6px;
+        font-size: 0.72rem;
     }
 }
 
