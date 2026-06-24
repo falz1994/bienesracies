@@ -1,4 +1,7 @@
-/* Responsive header tweaks (no hamburguesa) */
+/* ================================================================
+   RESPONSIVE TWEAKS - Mobile nav & layout overrides
+   ================================================================ */
+
 .header-container {
     display: flex;
     align-items: center;
@@ -10,39 +13,74 @@
 }
 
 .header-container .brand a {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     margin: 0;
     padding: 0.6rem 0;
     color: var(--primary);
+    font-weight: 700;
 }
 
 header nav {
     display: flex;
-    gap: 1rem;
-    margin-left: auto;
+    gap: 0.25rem;
 }
 
 header nav a {
     text-decoration: none;
-    color: var(--text);
-    padding: 0.5rem 0.75rem;
+    color: var(--muted);
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+header nav a:hover {
+    background: rgba(14,165,164,0.07);
+    color: var(--primary);
+}
+
+header nav a.active {
+    background: rgba(14,165,164,0.10);
+    color: var(--primary);
+    font-weight: 600;
 }
 
 @media screen and (max-width: 768px) {
+    .header-container {
+        padding: 0.5rem 1rem;
+        height: auto;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .header-container .brand a {
+        font-size: 1rem;
+        padding: 0.4rem 0;
+    }
+
     header nav {
-        flex-direction: column;
-        gap: 0.25rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.2rem;
         width: 100%;
+        padding-bottom: 4px;
     }
 
     header nav a {
-        padding: 0.75rem 1rem;
+        padding: 0.45rem 0.6rem;
         text-align: center;
+        font-size: 0.8rem;
+        border-radius: 5px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header-container {
+        padding: 0.4rem 0.75rem;
     }
 
-    .header-container {
-        position: relative;
-        justify-content: space-between;
-        padding: 0.5rem 1rem;
+    header nav a {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.75rem;
     }
 }

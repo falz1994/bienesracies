@@ -1,22 +1,23 @@
-/* Resetear posibles estilos previos */
+/* ================================================================
+   FOOTER
+   ================================================================ */
 footer {
     position: static !important;
 }
 
-/* Estilos del footer */
 .footer-content {
-    background-color: white;
+    background-color: var(--card);
     padding: 1rem;
     text-align: center;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    border-top: 1px solid var(--card-border);
 }
 
 .footer-content p {
     margin: 0;
-    color: #666;
+    color: var(--muted);
+    font-size: 0.8rem;
 }
 
-/* Estructura para empujar el footer al final */
 body {
     min-height: 100vh;
     display: flex;
@@ -25,5 +26,4 @@ body {
 
 .content {
     flex: 1;
-    padding-bottom: 2rem;
 }
