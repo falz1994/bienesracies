@@ -19,6 +19,11 @@
     --header-bg: #ffffff;
 }
 
+html {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg);
@@ -26,6 +31,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 /* ================================================================
@@ -119,6 +126,7 @@ header nav a.active {
     margin: 0 auto;
     width: 100%;
     flex: 1;
+    overflow-x: hidden;
 }
 
 /* ================================================================
