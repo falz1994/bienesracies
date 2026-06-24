@@ -19,7 +19,8 @@ function ajustarParaViewport() {
 
     const mapEl = document.getElementById('mapa');
     if (mapEl) {
-        mapEl.style.height = isMobile ? '420px' : '600px';
+        mapEl.style.height = isMobile ? '50vh' : '60vh';
+        mapEl.style.minHeight = '280px';
     }
 
     // If we have properties loaded and a map, recreate heatmap with mobile options

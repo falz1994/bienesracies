@@ -42,25 +42,24 @@ header {
 }
 
 header .header-container {
-    max-width: 1200px;
+    max-width: 95vw;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 2vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    height: 56px;
+    height: 3.5rem;
 }
 
 header .brand a {
-    margin: 0;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 1.3vw, 1.15rem);
     font-weight: 700;
     color: var(--primary);
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.4rem;
 }
 
 header .brand a i {
@@ -70,17 +69,17 @@ header .brand a i {
 header nav {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
 }
 
 header nav a {
     color: var(--muted);
     text-decoration: none;
-    padding: 0.4rem 0.75rem;
-    border-radius: 6px;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.35rem;
     transition: background 0.18s, color 0.18s;
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: clamp(0.7rem, 0.85vw, 0.9rem);
 }
 
 header nav a:hover {
@@ -97,7 +96,7 @@ header nav a.active {
 @media (max-width: 900px) {
     header .header-container {
         height: auto;
-        padding: 10px 16px;
+        padding: 1.5vw 3vw;
         flex-wrap: wrap;
     }
     header nav {
@@ -107,8 +106,7 @@ header nav a.active {
         width: 100%;
     }
     header nav a {
-        padding: 0.5rem 0.65rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 0.6rem;
     }
 }
 
@@ -116,8 +114,8 @@ header nav a.active {
    CONTENT WRAPPER
    ================================================================ */
 .content {
-    padding: 1.5rem 2rem 4rem 2rem;
-    max-width: 1200px;
+    padding: 2vw 3vw 5vw 3vw;
+    max-width: 95vw;
     margin: 0 auto;
     width: 100%;
     flex: 1;
@@ -129,12 +127,12 @@ header nav a.active {
 .source-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.85rem;
+    font-size: clamp(0.7rem, 0.85vw, 0.88rem);
 }
 
 .source-table th,
 .source-table td {
-    padding: 8px 10px;
+    padding: 0.5rem 0.6rem;
     text-align: left;
     border-bottom: 1px solid var(--card-border);
 }
@@ -142,25 +140,24 @@ header nav a.active {
 .source-table th {
     font-weight: 600;
     color: var(--muted);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.4px;
 }
 
 /* ================================================================
-   INSIGHT CARDS (base, overridden by bienes-raices.css)
+   INSIGHT CARDS (base overrides)
    ================================================================ */
 .insight-card {
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 10px;
+    border-radius: 0.6rem;
     box-shadow: var(--card-shadow);
-    padding: 20px;
 }
 
 .insight-card h2 {
-    margin: 0 0 12px 0;
-    font-size: 0.85rem;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.8rem;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -174,16 +171,16 @@ header nav a.active {
    ================================================================ */
 .table-container {
     margin: 0;
-    padding: 24px;
+    padding: 1.5rem;
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 10px;
+    border-radius: 0.6rem;
     box-shadow: var(--card-shadow);
     overflow-x: auto;
 }
 
 .table-container h2 {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     color: var(--text);
     font-size: 1.2rem;
 }
