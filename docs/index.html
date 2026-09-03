@@ -131,6 +131,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
         <label><input type="checkbox" id="c-zonas" onchange="renderMapa()"> Zonas</label>
         <label><input type="checkbox" id="c-cob" onchange="renderMapa()"> Cobertura agencias</label>
         <label><input type="checkbox" id="c-vac" onchange="renderMapa()"> Poco cubiertas</label>
+        <label><input type="checkbox" id="c-gob" onchange="renderMapa()"> Urbanizaciones del Gobierno</label>
       </div>
     </div>
     <div class="ctrl-group">
@@ -154,7 +155,8 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <span class="chip mb">■ Momotombo</span> ·
     <span class="chip sv">■ Sovinic</span> —
     celda coloreada por la agencia con más listados allí ·
-    <span style="color:#7a8699">■ gris = zona poco cubierta (sin ofertas registradas)</span>
+    <span style="color:#7a8699">■ gris = zona poco cubierta (sin ofertas registradas)</span> ·
+    <span style="color:#2DD4BF">● turquesa = urbanización del Gobierno</span>
   </div>
   <div class="aviso" style="border-color:rgba(91,155,213,.5);background:rgba(91,155,213,.08)">
     El heatmap usa escala logarítmica recortada al rango p5–p95 de las propiedades activas. Los colores
@@ -175,6 +177,18 @@ footer .descargas a:hover{border-color:var(--amarillo)}
       <tbody id="tb-baratas"></tbody></table>
     </div>
   </div>
+</div></section>
+
+<section id="gob"><div class="wrap">
+  <h2>Urbanizaciones <span class="tag">del Gobierno</span></h2>
+  <p class="sub">Programas Bismarck Martínez (Alcaldía de Managua) y Nuevas Victorias (INVUR). Investigación web
+  (Alcaldía de Managua, Canal 4, TN8, El 19 Digital, Confidencial) + geocodificación por nombre con OSM/Overpass.
+  La columna "portales" cuenta los listados de KW/QuieroCasa/Momotombo/Sovinic a menos de 1.3 km: ahí se ven las
+  <b>celdas en blanco</b> del mercado formal.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Urbanización</th><th>Programa</th><th>Viviendas</th><th>Ubicación</th><th>Portales</th></tr></thead>
+    <tbody id="tb-gob"></tbody></table></div>
+  <p style="margin-top:12px;font-size:13px;color:var(--gris)">Fuentes: <span id="gob-fuentes"></span></p>
 </div></section>
 
 <section id="metodologia"><div class="wrap">
@@ -246,7 +260,8 @@ const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
 L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, attribution:'© Esri'}).addTo(mapa);
 L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, opacity:.85}).addTo(mapa);
 
-let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null;
+let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null, capaGob = null;
+const PROG_GOB = [];
 const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC', sv:'#FF8C42'};
 
 function activos() {
@@ -282,6 +297,7 @@ function renderMapa() {
   if (capaZonas) { mapa.removeLayer(capaZonas); capaZonas = null; }
   if (capaCob) { mapa.removeLayer(capaCob); capaCob = null; }
   if (capaVac) { mapa.removeLayer(capaVac); capaVac = null; }
+  if (capaGob) { mapa.removeLayer(capaGob); capaGob = null; }
 
   if (document.getElementById('c-heat').checked) {
     const pts = [];
@@ -343,7 +359,26 @@ function renderMapa() {
 
   const cobOn = document.getElementById('c-cob').checked;
   const vacOn = document.getElementById('c-vac').checked;
-  document.getElementById('leyCob').style.display = (cobOn || vacOn) ? 'block' : 'none';
+  const gobOn = document.getElementById('c-gob').checked;
+  document.getElementById('leyCob').style.display = (cobOn || vacOn || gobOn) ? 'block' : 'none';
+  if (gobOn && PROG_GOB.length) {
+    capaGob = L.layerGroup();
+    for (const g of PROG_GOB) {
+      if (g.lat == null) continue;
+      const cerca = LISTADOS.filter(d =>
+        Math.abs(d.lat - g.lat) < 0.012 && Math.abs(d.lng - g.lng) < 0.012).length;
+      const blanco = cerca === 0;
+      L.circle([g.lat, g.lng], {radius: 420, color: '#2DD4BF', weight: 1.5,
+        dashArray: '6 6', fillColor: '#2DD4BF', fillOpacity: .08}).addTo(capaGob);
+      L.circleMarker([g.lat, g.lng], {radius: 8, weight: 2, color: '#0D1526',
+        fillColor: '#2DD4BF', fillOpacity: 1}).addTo(capaGob)
+       .bindPopup(`<div class="popup"><b>${g.nombre}</b><br>
+        <span style="color:#2DD4BF">🏛 ${g.programa}</span> · ${g.viviendas} viviendas<br>
+        <span style="color:#666;font-size:12px">${g.descripcion}</span><br>
+        <b>Portales inmobiliarios a <1.3 km: ${cerca}</b> ${blanco ? '— zona en blanco ⚠️' : ''}</div>`);
+    }
+    capaGob.addTo(mapa);
+  }
   if (!cobOn && !vacOn) return;
 
   const km = parseFloat(document.getElementById('z-km').value);
@@ -389,11 +424,13 @@ function renderMapa() {
 
 // ---------- carga de datos ----------
 async function cargar() {
-  const [stats, zonas, listados] = await Promise.all([
+  const [stats, zonas, listados, gob] = await Promise.all([
     fetch('data/stats.json').then(r => r.json()),
     fetch('data/zonas.json').then(r => r.json()),
-    fetch('data/listados.json').then(r => r.json())
+    fetch('data/listados.json').then(r => r.json()),
+    fetch('data/programas_gobierno.json').then(r => r.json())
   ]);
+  PROG_GOB.push(...(gob.programas || []));
   LISTADOS.push(...listados);
 
   const g = stats.global;
@@ -412,6 +449,19 @@ async function cargar() {
     `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
   document.getElementById('tb-caras').innerHTML = filas(zonas.caras);
   document.getElementById('tb-baratas').innerHTML = filas(zonas.baratas);
+
+  document.getElementById('tb-gob').innerHTML = PROG_GOB.map(g => {
+    const cerca = LISTADOS.filter(d => g.lat != null &&
+      Math.abs(d.lat - g.lat) < 0.012 && Math.abs(d.lng - g.lng) < 0.012).length;
+    const co = g.lat == null ? '<span style="color:#8B95AB">por confirmar</span>'
+      : cerca === 0 ? '<span style="color:#ff6b6b;font-weight:700">⚠️ zona en blanco</span>'
+      : cerca < 12 ? `<span style="color:#F2C14E">poca (${cerca})</span>` : cerca;
+    return `<tr><td><b>${g.nombre}</b>${g.precision === 'aproximado' ? ' <span style="font-size:11px;color:#8B95AB">(aprox.)</span>' : ''}</td>
+      <td>${g.programa}</td><td>${g.viviendas}</td>
+      <td style="font-size:13px;color:#8B95AB">${g.descripcion}</td><td>${co}</td></tr>`;
+  }).join('');
+  document.getElementById('gob-fuentes').innerHTML = (gob.fuentes || [])
+    .map(u => `<a href="${u}" target="_blank">${new URL(u).hostname.replace('www.','')}</a>`).join(' · ');
 
   renderMapa();
 }

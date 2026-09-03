@@ -1,0 +1,120 @@
+{
+ "programas": [
+  {
+   "nombre": "Villa Jerusalén",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Sabana Grande, zona oriental de Managua",
+   "viviendas": "2,150+",
+   "lat": 12.1214,
+   "lng": -86.1668,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Flor de Pino",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Distrito VI, contiguo a Residencial Nicaragua",
+   "viviendas": "1,000",
+   "lat": 12.1438,
+   "lng": -86.2168,
+   "precision": "osm"
+  },
+  {
+   "nombre": "Caminos del Río",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Sabana Grande, zona oriental de Managua",
+   "viviendas": "1,528",
+   "lat": 12.1179,
+   "lng": -86.1653,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Villa Santiago",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Sabana Grande, zona oriental de Managua",
+   "viviendas": "481",
+   "lat": 12.124,
+   "lng": -86.17,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Residencial Las Madres",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Sabana Grande · inaugurada mayo 2026",
+   "viviendas": "575",
+   "lat": 12.1195,
+   "lng": -86.173,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Urbanización Nuevas Victorias",
+   "programa": "INVUR / Alcaldía",
+   "descripcion": "Sabana Grande, coop. con China · fase 1",
+   "viviendas": "920",
+   "lat": 12.1167,
+   "lng": -86.1772,
+   "precision": "osm"
+  },
+  {
+   "nombre": "Residencial Nicaragua",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Rotonda Las Mercedes, Carretera Norte · abr 2026",
+   "viviendas": "250",
+   "lat": 12.146,
+   "lng": -86.218,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Mirador Xolotlán",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Sector Xolotlán (vistas al lago)",
+   "viviendas": "80",
+   "lat": 12.1161,
+   "lng": -86.2156,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Apartamentos Roberto Clemente",
+   "programa": "INVUR / Alcaldía",
+   "descripcion": "Contiguo al Complejo Deportivo Dignidad, Distrito II",
+   "viviendas": "134",
+   "lat": 12.1492,
+   "lng": -86.283,
+   "precision": "osm"
+  },
+  {
+   "nombre": "Reparto Doña Lidia Saavedra",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Cerca de los juzgados de Nejapa · 2026",
+   "viviendas": "125",
+   "lat": 12.1183,
+   "lng": -86.3215,
+   "precision": "aproximado"
+  },
+  {
+   "nombre": "Pablo María",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Managua · entregas 2026",
+   "viviendas": "32",
+   "lat": 12.0882,
+   "lng": -86.23,
+   "precision": "osm"
+  },
+  {
+   "nombre": "Villa Esperanza",
+   "programa": "Bismarck Martínez",
+   "descripcion": "Lotificación · 250 lotes · ubicación por confirmar",
+   "viviendas": "250 lotes",
+   "lat": null,
+   "lng": null,
+   "precision": "pendiente"
+  }
+ ],
+ "fuentes": [
+  "https://www.managua.gob.ni/programa-bismarck-martinez-apertura-residencial-nicaragua-en-managua/",
+  "https://www.tn8.ni/nacionales/residencial-las-madres-575-nuevas-viviendas-para-familias-nicaraguenses/",
+  "https://www.canal4.com.ni/avanza-programa-bismarck-martinez-con-mas-mil-200-viviendas-managua/",
+  "https://www.el19digital.com/articulos/ver/titulo:143170-avanza-construccion-de-viviendas-en-la-urbanizacion-nuevas-victorias-en-managua",
+  "https://confidencial.digital/nacion/las-nuevas-casas-de-la-alcaldia-de-managua-no-son-para-los-pobres"
+ ],
+ "nota": "Ubicaciones por OSM/Nominatim; los proyectos nuevos del clúster Sabana Grande usan el ancla de la comarca (±400 m). Villa Esperanza sin coordenadas confirmadas."
+}
