@@ -1,23 +1,24 @@
 # Bienes Raíces Managua — Análisis de precios de vivienda
 
 Sitio web con el análisis de precios de casas en venta en el Área Metropolitana de Managua,
-consolidando **tres fuentes inmobiliarias**:
+consolidando **cuatro fuentes inmobiliarias**:
 
 | Fuente | Tipo de acceso | Coordenadas |
 |---|---|---|
 | [KW Nicaragua](https://kwnicaragua.kw.com) | API GraphQL pública | ✅ nativas |
 | [QuieroCasa](https://www.quierocasa.com) | HTML server-rendered | ❌ geocodificadas (Nominatim) |
 | [Momotombo](https://momotomborealestate.com) | WordPress/Houzez, HTML | ❌ geocodificadas (Nominatim) |
+| [Sovinic](https://www.sovinic.com.ni) | WordPress/Elementor, HTML | ❌ geocodificadas (Nominatim) |
 
 **Qué contiene el sitio (`docs/index.html`, raíz de Vercel = `docs`):**
 - Mapa de calor interactivo (precio / densidad) con clusters y cuadrícula de zonas
-- Filtros por fuente (KW / QuieroCasa / Momotombo)
+- Filtros por fuente (KW / QuieroCasa / Momotombo / Sovinic)
 - Top 10 zonas más caras y más baratas (por promedio de venta)
 - Galería con los 9 slides del análisis
 - Metodología, consideraciones (sesgo de selección) y oportunidades futuras
 
 **Datos disponibles para uso dinámico (`data/`):**
-- `data/listados.json` — 1,481 propiedades consolidadas: precio, lat/lng, zona, tipo,
+- `data/listados.json` — 1,498 propiedades consolidadas: precio, lat/lng, zona, tipo,
   habitaciones, baños, m², URL del anuncio, imagen, fuente
 - `stats.json` — estadísticas globales y por fuente (n, media, p25, p75, p5, p95)
 - `zonas.json` — ranking de zonas caras/baratas (promedio, mediana, nº de listados)

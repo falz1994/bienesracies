@@ -85,6 +85,21 @@ def mb_rows():
                "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or ""}
 
 
+def sv_rows():
+    for r in csv.DictReader(open(f"{ANALISIS}/sovinic_venta.csv", encoding="utf-8-sig")):
+        m = (r.get("municipio") or "").strip().lower()
+        d = (r.get("departamento") or "").strip().lower()
+        if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
+            continue
+        if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
+            continue
+        yield {"id": "sv" + r["id"], "fuente": "sv", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
+               "p": _f(r["precio"]), "zona": (r["loc"] or "").strip().title(),
+               "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["area"]),
+               "lote": _f(r["lote"]), "tipo": "Casa", "url": r["url"], "img": r["imagen"],
+               "ciudad": (r.get("municipio") or "").strip(), "dir": r["loc"] or ""}
+
+
 def dedupe(items):
     out, dups = [], 0
     vistos = set()
@@ -101,7 +116,7 @@ def dedupe(items):
 
 
 def main():
-    items = list(kw_rows()) + list(qc_rows()) + list(mb_rows())
+    items = list(kw_rows()) + list(qc_rows()) + list(mb_rows()) + list(sv_rows())
     unicos, dups = dedupe(items)
     print(f"total={len(items)} únicos={len(unicos)} repetidos={dups}")
 
@@ -118,12 +133,14 @@ def main():
                 "p25": round(ps[len(ps) // 4]), "p75": round(ps[3 * len(ps) // 4]),
                 "p5": round(ps[int(len(ps) * .05)]), "p95": round(ps[int(len(ps) * .95)])}
     fecha_m = max(os.path.getmtime(f"{ANALISIS}/{n}") for n in
-                  ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv"))
+                  ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv",
+                   "sovinic_venta.csv"))
     stats_json = {"fecha": datetime.date.fromtimestamp(fecha_m).isoformat(),
                   "global": stats(unicos),
                   "kw": stats([x for x in unicos if x["fuente"] == "kw"]),
                   "qc": stats([x for x in unicos if x["fuente"] == "qc"]),
                   "mb": stats([x for x in unicos if x["fuente"] == "mb"]),
+                  "sv": stats([x for x in unicos if x["fuente"] == "sv"]),
                   "repetidos": dups}
     with open(f"{REPO}/docs/data/stats.json", "w", encoding="utf-8") as f:
         json.dump(stats_json, f, ensure_ascii=False, indent=1)
@@ -141,7 +158,8 @@ def main():
         json.dump(zonas, f, ensure_ascii=False, indent=1)
 
     # CSVs para descarga + slides
-    for nombre in ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv"):
+    for nombre in ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv",
+                   "sovinic_venta.csv"):
         shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/docs/data/{nombre}")
     for png in sorted(os.listdir(f"{ANALISIS}/slides")):
         if png.endswith(".png"):
