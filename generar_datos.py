@@ -4,6 +4,7 @@ Fuentes: KW Nicaragua, QuieroCasa y Momotombo (venta, Managua + Ciudad Sandino +
 Uso: python3 generar_datos.py   (requiere los CSVs en /home/devni/analisis bienes raices/)
 """
 import csv
+import datetime
 import json
 import os
 import shutil
@@ -116,7 +117,10 @@ def main():
         return {"n": len(ps), "media": round(statistics.mean(ps)),
                 "p25": round(ps[len(ps) // 4]), "p75": round(ps[3 * len(ps) // 4]),
                 "p5": round(ps[int(len(ps) * .05)]), "p95": round(ps[int(len(ps) * .95)])}
-    stats_json = {"global": stats(unicos),
+    fecha_m = max(os.path.getmtime(f"{ANALISIS}/{n}") for n in
+                  ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv"))
+    stats_json = {"fecha": datetime.date.fromtimestamp(fecha_m).isoformat(),
+                  "global": stats(unicos),
                   "kw": stats([x for x in unicos if x["fuente"] == "kw"]),
                   "qc": stats([x for x in unicos if x["fuente"] == "qc"]),
                   "mb": stats([x for x in unicos if x["fuente"] == "mb"]),

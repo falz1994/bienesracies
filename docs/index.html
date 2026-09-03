@@ -39,12 +39,18 @@ h2{font-size:30px;font-weight:800;margin-bottom:6px}
 h2 .tag{color:var(--amarillo)}
 .sub{color:var(--gris);margin-bottom:22px;font-size:15px}
 #mapa{height:640px;border-radius:16px;background:#11151c;border:1px solid #1d2740}
-.controles{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:14px 0;
-  background:var(--panel);border:1px solid #1d2740;border-radius:12px;padding:12px 16px;font-size:14px}
-.controles label{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--gris)}
-.controles label input{accent-color:var(--rojo)}
-.controles .sep{width:1px;height:22px;background:#1d2740}
-.controles input[type=range]{width:140px}
+.controles{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0;font-size:14px}
+.ctrl-group{flex:1;min-width:240px;background:var(--panel);border:1px solid #1d2740;
+  border-radius:12px;padding:12px 16px}
+.ctrl-tit{font-size:11px;letter-spacing:2px;color:var(--gris);text-transform:uppercase;
+  font-weight:700;margin-bottom:9px}
+.ctrl-items{display:flex;flex-wrap:wrap;gap:9px 16px;align-items:center}
+.ctrl-items label{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--gris)}
+.ctrl-items label:hover{color:var(--txt)}
+.ctrl-items input[type=checkbox]{accent-color:var(--rojo);width:15px;height:15px}
+.ctrl-items select{background:#0D1526;color:var(--txt);border:1px solid #1d2740;
+  border-radius:6px;padding:4px 8px;font-size:13px}
+.ctrl-items input[type=range]{width:120px;accent-color:var(--amarillo)}
 .chip{font-weight:700}
 .chip.kw{color:#F2C14E}.chip.qc{color:#5B9BD5}.chip.mb{color:#C9A0DC}
 .zonas-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -89,14 +95,14 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <a href="#stats">Estadísticas</a>
   <a href="#mapa-sec">Mapa</a>
   <a href="#zonas">Zonas</a>
-  <a href="#slides">Slides</a>
   <a href="#metodologia">Metodología</a>
   <a href="#descargas">Descargas</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
   <h1>Análisis de precios de <span>casas en venta</span><br>en el Área Metropolitana de Managua</h1>
-  <p>1,500+ propiedades de KW Nicaragua, QuieroCasa y Momotombo · consolidado, geocodificado y deduplicado</p>
+  <p>1,500+ propiedades de KW Nicaragua, QuieroCasa y Momotombo · consolidado, geocodificado y deduplicado<br>
+  <span style="font-size:14px">Datos extraídos el <b id="fechaExt" style="color:var(--amarillo)">—</b></span></p>
   <div class="bigstats" id="statsGlobal"></div>
   <div class="aviso"><b>⚠️ Consideración importante:</b> estos portales muestran el <b>segmento formal
   del mercado</b> (casas comercializadas por agencias inmobiliarias). Los promedios son un acercamiento,
@@ -108,23 +114,36 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <p class="sub">Cada punto es una propiedad. Verde = más barato, rojo = más caro. Activa/desactiva fuentes y capas.</p>
   <div id="mapa"></div>
   <div class="controles">
-    <label><input type="checkbox" id="f-kw" checked onchange="renderMapa()"> <span class="chip kw">KW Nicaragua</span></label>
-    <label><input type="checkbox" id="f-qc" checked onchange="renderMapa()"> <span class="chip qc">QuieroCasa</span></label>
-    <label><input type="checkbox" id="f-mb" checked onchange="renderMapa()"> <span class="chip mb">Momotombo</span></label>
-    <div class="sep"></div>
-    <label><input type="checkbox" id="c-heat" checked onchange="renderMapa()"> Heatmap</label>
-    <label><input type="checkbox" id="c-clus" checked onchange="renderMapa()"> Clusters</label>
-    <label><input type="checkbox" id="c-zonas" onchange="renderMapa()"> Zonas</label>
-    <label><input type="checkbox" id="c-cob" onchange="renderMapa()"> Cobertura agencias</label>
-    <label><input type="checkbox" id="c-vac" onchange="renderMapa()"> Zonas poco cubiertas</label>
-    <div class="sep"></div>
-    <label>Peso:
-      <select id="heat-mode" onchange="renderMapa()">
-        <option value="precio">Precio</option>
-        <option value="densidad">Densidad</option>
-      </select>
-    </label>
-    <label>Tamaño zona: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
+    <div class="ctrl-group">
+      <div class="ctrl-tit">Fuentes</div>
+      <div class="ctrl-items">
+        <label><input type="checkbox" id="f-kw" checked onchange="renderMapa()"> <span class="chip kw">KW</span></label>
+        <label><input type="checkbox" id="f-qc" checked onchange="renderMapa()"> <span class="chip qc">QuieroCasa</span></label>
+        <label><input type="checkbox" id="f-mb" checked onchange="renderMapa()"> <span class="chip mb">Momotombo</span></label>
+      </div>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-tit">Capas</div>
+      <div class="ctrl-items">
+        <label><input type="checkbox" id="c-heat" checked onchange="renderMapa()"> Heatmap</label>
+        <label><input type="checkbox" id="c-clus" checked onchange="renderMapa()"> Clusters</label>
+        <label><input type="checkbox" id="c-zonas" onchange="renderMapa()"> Zonas</label>
+        <label><input type="checkbox" id="c-cob" onchange="renderMapa()"> Cobertura agencias</label>
+        <label><input type="checkbox" id="c-vac" onchange="renderMapa()"> Poco cubiertas</label>
+      </div>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-tit">Ajustes</div>
+      <div class="ctrl-items">
+        <label>Peso:
+          <select id="heat-mode" onchange="renderMapa()">
+            <option value="precio">Precio</option>
+            <option value="densidad">Densidad</option>
+          </select>
+        </label>
+        <label>Celda: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
+      </div>
+    </div>
   </div>
   <div id="leyCob" style="display:none;margin:12px 0;padding:10px 16px;background:var(--panel);
     border:1px solid #1d2740;border-radius:12px;font-size:13px;color:var(--gris)">
@@ -154,12 +173,6 @@ footer .descargas a:hover{border-color:var(--amarillo)}
       <tbody id="tb-baratas"></tbody></table>
     </div>
   </div>
-</div></section>
-
-<section id="slides"><div class="wrap">
-  <h2>Presentación <span class="tag">TikTok</span></h2>
-  <p class="sub">Los 9 slides del análisis, listos para publicar.</p>
-  <div class="galeria" id="galeria"></div>
 </div></section>
 
 <section id="metodologia"><div class="wrap">
@@ -379,6 +392,10 @@ async function cargar() {
   LISTADOS.push(...listados);
 
   const g = stats.global;
+  if (stats.fecha) {
+    document.getElementById('fechaExt').textContent =
+      new Date(stats.fecha + 'T12:00:00').toLocaleDateString('es-NI', {day:'numeric', month:'long', year:'numeric'});
+  }
   document.getElementById('statsGlobal').innerHTML =
     `<div class="c"><b>${g.n.toLocaleString()}</b><span>propiedades en venta</span></div>
      <div class="c"><b>3</b><span>fuentes consolidadas</span></div>
@@ -390,21 +407,6 @@ async function cargar() {
     `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
   document.getElementById('tb-caras').innerHTML = filas(zonas.caras);
   document.getElementById('tb-baratas').innerHTML = filas(zonas.baratas);
-
-  const caps = [
-    ['01_mapa_calor','Mapa de calor'],
-    ['02_interpretacion_mapa','Interpretación · Mapa'],
-    ['03_consideracion','Consideración importante'],
-    ['04_top10_zonas_caras','Top 10 zonas caras'],
-    ['05_interpretacion_caras','Interpretación · Caras'],
-    ['06_top10_zonas_baratas','Top 10 zonas baratas'],
-    ['07_interpretacion_baratas','Interpretación · Baratas'],
-    ['08_metodologia','Metodología'],
-    ['09_oportunidades_futuras','Oportunidades futuras'],
-  ];
-  document.getElementById('galeria').innerHTML = caps.map(([f, t], i) =>
-    `<figure><img src="slides/${f}.png" alt="${t}" loading="lazy">
-     <figcaption><b>${String(i+1).padStart(2,'0')} · ${t}</b></figcaption></figure>`).join('');
 
   renderMapa();
 }
