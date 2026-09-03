@@ -1,0 +1,126 @@
+{
+ "caras": [
+  {
+   "zona": "Motastepe",
+   "n": 5,
+   "promedio": 1260200,
+   "mediana": 495000
+  },
+  {
+   "zona": "Sector Norte Comarca los Ladinos",
+   "n": 8,
+   "promedio": 1001288,
+   "mediana": 532044
+  },
+  {
+   "zona": "Barrio Waspán Norte",
+   "n": 13,
+   "promedio": 712964,
+   "mediana": 215000
+  },
+  {
+   "zona": "Las Cumbres",
+   "n": 14,
+   "promedio": 616597,
+   "mediana": 285000
+  },
+  {
+   "zona": "Balcones de Santo Domingo",
+   "n": 6,
+   "promedio": 599733,
+   "mediana": 542500
+  },
+  {
+   "zona": "& Renta Santo Domingo",
+   "n": 5,
+   "promedio": 562000,
+   "mediana": 560000
+  },
+  {
+   "zona": "Villa Fontana Sur",
+   "n": 10,
+   "promedio": 522710,
+   "mediana": 412500
+  },
+  {
+   "zona": "& Renta Carretera Sur",
+   "n": 4,
+   "promedio": 456000,
+   "mediana": 362500
+  },
+  {
+   "zona": "Altamira",
+   "n": 5,
+   "promedio": 441000,
+   "mediana": 165000
+  },
+  {
+   "zona": "Santo Domingo",
+   "n": 132,
+   "promedio": 423456,
+   "mediana": 333000
+  }
+ ],
+ "baratas": [
+  {
+   "zona": "Villa Carolina",
+   "n": 5,
+   "promedio": 107000,
+   "mediana": 120000
+  },
+  {
+   "zona": "Sector Lago",
+   "n": 9,
+   "promedio": 108439,
+   "mediana": 79700
+  },
+  {
+   "zona": "Batahola Norte",
+   "n": 3,
+   "promedio": 113000,
+   "mediana": 120000
+  },
+  {
+   "zona": "Ciudad Sandino",
+   "n": 3,
+   "promedio": 123333,
+   "mediana": 60000
+  },
+  {
+   "zona": "Veracruz",
+   "n": 22,
+   "promedio": 128259,
+   "mediana": 87500
+  },
+  {
+   "zona": "Linda Vista",
+   "n": 4,
+   "promedio": 128750,
+   "mediana": 135000
+  },
+  {
+   "zona": "Sierras Doradas",
+   "n": 3,
+   "promedio": 129333,
+   "mediana": 140000
+  },
+  {
+   "zona": "Monseñor Lezcano",
+   "n": 7,
+   "promedio": 135714,
+   "mediana": 85000
+  },
+  {
+   "zona": "Montoya",
+   "n": 4,
+   "promedio": 155000,
+   "mediana": 127500
+  },
+  {
+   "zona": "Monte Tabor",
+   "n": 3,
+   "promedio": 178333,
+   "mediana": 125000
+  }
+ ]
+}

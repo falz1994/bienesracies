@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienes Raíces Managua · Análisis de precios de vivienda</title>
+<meta name="description" content="Análisis de precios de casas en venta en el Área Metropolitana de Managua con datos de KW Nicaragua, QuieroCasa y Momotombo: mapa de calor, zonas más caras y baratas.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+:root{--bg:#0D1526;--panel:#141d33;--txt:#F0F3FA;--gris:#8B95AB;--amarillo:#F2C14E;
+  --azul:#5B9BD5;--rojo:#E15759;--verde:#57A773}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Inter','Segoe UI',Roboto,system-ui,sans-serif;line-height:1.5}
+a{color:var(--azul)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:1000;background:rgba(13,21,38,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid #1d2740;padding:12px 0}
+nav .wrap{display:flex;align-items:center;gap:18px}
+nav .logo{font-weight:800;font-size:18px}
+nav .logo span{color:var(--amarillo)}
+nav a{color:var(--gris);text-decoration:none;font-size:14px}
+nav a:hover{color:var(--txt)}
+header.hero{padding:70px 0 30px;text-align:center}
+header.hero h1{font-size:42px;font-weight:800;line-height:1.15}
+header.hero h1 span{color:var(--amarillo)}
+header.hero p{color:var(--gris);margin-top:12px;font-size:17px}
+.bigstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:34px 0}
+.bigstats .c{background:var(--panel);border:1px solid #1d2740;border-radius:14px;padding:18px;text-align:center}
+.bigstats .c b{display:block;font-size:30px}
+.bigstats .c span{color:var(--gris);font-size:13px}
+.aviso{background:linear-gradient(90deg,rgba(225,87,89,.14),rgba(242,193,78,.12));
+  border:1px solid rgba(225,87,89,.5);border-radius:14px;padding:20px 24px;margin:26px 0}
+.aviso b{color:#ffb3b5}
+section{padding:44px 0}
+h2{font-size:30px;font-weight:800;margin-bottom:6px}
+h2 .tag{color:var(--amarillo)}
+.sub{color:var(--gris);margin-bottom:22px;font-size:15px}
+#mapa{height:640px;border-radius:16px;background:#11151c;border:1px solid #1d2740}
+.controles{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:14px 0;
+  background:var(--panel);border:1px solid #1d2740;border-radius:12px;padding:12px 16px;font-size:14px}
+.controles label{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--gris)}
+.controles label input{accent-color:var(--rojo)}
+.controles .sep{width:1px;height:22px;background:#1d2740}
+.controles input[type=range]{width:140px}
+.chip{font-weight:700}
+.chip.kw{color:#F2C14E}.chip.qc{color:#5B9BD5}.chip.mb{color:#C9A0DC}
+.zonas-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:800px){.zonas-col{grid-template-columns:1fr}}
+.tabla{background:var(--panel);border:1px solid #1d2740;border-radius:14px;padding:18px 20px}
+.tabla h3{font-size:19px;margin-bottom:12px}
+.tabla h3 .rojo{color:var(--rojo)}.tabla h3 .verde{color:var(--verde)}
+.tabla table{width:100%;border-collapse:collapse;font-size:14px}
+.tabla th{color:var(--gris);text-align:left;font-weight:600;padding:6px 4px;border-bottom:1px solid #1d2740;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.tabla td{padding:7px 4px;border-bottom:1px solid #141c30}
+.tabla tr:last-child td{border-bottom:none}
+.tabla td:last-child, .tabla th:last-child{text-align:right;font-weight:700}
+.tabla td:nth-child(3){text-align:right}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.galeria figure{background:var(--panel);border:1px solid #1d2740;border-radius:14px;overflow:hidden}
+.galeria img{width:100%;display:block}
+.galeria figcaption{padding:10px 14px;color:var(--gris);font-size:13px}
+.galeria figcaption b{color:var(--txt)}
+.met{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.met .c{background:var(--panel);border:1px solid #1d2740;border-top:3px solid var(--azul);border-radius:14px;padding:18px}
+.met .c.amarillo{border-top-color:var(--amarillo)}
+.met .c.verde{border-top-color:var(--verde)}
+.met .c.morado{border-top-color:#C9A0DC}
+.met .c h3{font-size:15px;letter-spacing:1.5px;margin-bottom:8px}
+.met .c p{color:var(--gris);font-size:14px}
+.met .c b{color:var(--txt)}
+footer{padding:40px 0 60px;border-top:1px solid #1d2740;margin-top:50px;color:var(--gris);font-size:14px}
+footer .descargas{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+footer .descargas a{background:var(--panel);border:1px solid #1d2740;border-radius:8px;
+  padding:8px 14px;text-decoration:none;font-size:13px}
+footer .descargas a:hover{border-color:var(--amarillo)}
+.popup img{width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px}
+.popup .precio{font-size:15px;font-weight:700;color:#e15759}
+.popup .z{color:#555;font-size:12px}
+#volver{display:none;position:fixed;bottom:24px;right:24px;z-index:900;background:var(--rojo);
+  color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="logo">🏠 Bienes<span>Raíces</span> Managua</div>
+  <a href="#stats">Estadísticas</a>
+  <a href="#mapa-sec">Mapa</a>
+  <a href="#zonas">Zonas</a>
+  <a href="#slides">Slides</a>
+  <a href="#metodologia">Metodología</a>
+  <a href="#descargas">Descargas</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>Análisis de precios de <span>casas en venta</span><br>en el Área Metropolitana de Managua</h1>
+  <p>1,500+ propiedades de KW Nicaragua, QuieroCasa y Momotombo · consolidado, geocodificado y deduplicado</p>
+  <div class="bigstats" id="statsGlobal"></div>
+  <div class="aviso"><b>⚠️ Consideración importante:</b> estos portales muestran el <b>segmento formal
+  del mercado</b> (casas comercializadas por agencias inmobiliarias). Los promedios son un acercamiento,
+  no el precio real de todas las viviendas de Managua.</div>
+</div></header>
+
+<section id="mapa-sec"><div class="wrap">
+  <h2>Mapa de <span class="tag">calor</span> de precios</h2>
+  <p class="sub">Cada punto es una propiedad. Verde = más barato, rojo = más caro. Activa/desactiva fuentes y capas.</p>
+  <div id="mapa"></div>
+  <div class="controles">
+    <label><input type="checkbox" id="f-kw" checked onchange="renderMapa()"> <span class="chip kw">KW Nicaragua</span></label>
+    <label><input type="checkbox" id="f-qc" checked onchange="renderMapa()"> <span class="chip qc">QuieroCasa</span></label>
+    <label><input type="checkbox" id="f-mb" checked onchange="renderMapa()"> <span class="chip mb">Momotombo</span></label>
+    <div class="sep"></div>
+    <label><input type="checkbox" id="c-heat" checked onchange="renderMapa()"> Heatmap</label>
+    <label><input type="checkbox" id="c-clus" checked onchange="renderMapa()"> Clusters</label>
+    <label><input type="checkbox" id="c-zonas" onchange="renderMapa()"> Zonas</label>
+    <div class="sep"></div>
+    <label>Peso:
+      <select id="heat-mode" onchange="renderMapa()">
+        <option value="precio">Precio</option>
+        <option value="densidad">Densidad</option>
+      </select>
+    </label>
+    <label>Tamaño zona: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
+  </div>
+  <div class="aviso" style="border-color:rgba(91,155,213,.5);background:rgba(91,155,213,.08)">
+    El heatmap usa escala logarítmica recortada al rango p5–p95 de las propiedades activas. Los colores
+    de clusters y zonas son percentiles de precio dentro del conjunto visible.
+  </div>
+</div></section>
+
+<section id="zonas"><div class="wrap">
+  <h2>Zonas <span class="tag">más caras</span> y <span class="tag">más baratas</span></h2>
+  <p class="sub">Ranking por promedio de venta. Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.</p>
+  <div class="zonas-col">
+    <div class="tabla"><h3><span class="rojo">🔴 Las 10 zonas más caras</span></h3>
+      <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
+      <tbody id="tb-caras"></tbody></table>
+    </div>
+    <div class="tabla"><h3><span class="verde">🟢 Las 10 zonas más baratas</span></h3>
+      <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
+      <tbody id="tb-baratas"></tbody></table>
+    </div>
+  </div>
+</div></section>
+
+<section id="slides"><div class="wrap">
+  <h2>Presentación <span class="tag">TikTok</span></h2>
+  <p class="sub">Los 9 slides del análisis, listos para publicar.</p>
+  <div class="galeria" id="galeria"></div>
+</div></section>
+
+<section id="metodologia"><div class="wrap">
+  <h2>Metodología y <span class="tag">oportunidades</span></h2>
+  <p class="sub">Cómo se construyó el análisis y por dónde puede crecer.</p>
+  <div class="met">
+    <div class="c amarillo"><h3>HERRAMIENTAS</h3>
+      <p>Pipeline construido con <b>OpenCode</b> usando <b>GLM 5.3 Flash</b> (Z.ai) para el análisis de datos y el diseño de los slides.</p></div>
+    <div class="c"><h3>FUENTES DE DATOS</h3>
+      <p><b>KW Nicaragua</b>: API GraphQL pública, con coordenadas nativas. <b>QuieroCasa</b> y <b>Momotombo</b>: HTML sin API ni coordenadas — geocodificadas por nombre de zona con OpenStreetMap/Nominatim.</p></div>
+    <div class="c verde"><h3>CONSOLIDACIÓN</h3>
+      <p>Deduplicación entre portales (±110 m y precio similar), filtro a Managua + Ciudad Sandino + Ticuantepe (Nindirí excluido) y ranking por promedio de venta.</p></div>
+    <div class="c morado"><h3>OPORTUNIDADES FUTURAS</h3>
+      <p>Encuentra24, Facebook Marketplace y clasificados entre particulares; precio por m²; históricos y propiedades vendidas; alquileres y más segmentos.</p></div>
+  </div>
+</div></section>
+
+<footer id="descargas"><div class="wrap">
+  <h2 style="font-size:22px">Descargas de <span class="tag">datos</span></h2>
+  <div class="descargas">
+    <a href="data/listados.json" download>listados.json (todo el dataset)</a>
+    <a href="data/stats.json" download>stats.json (estadísticas)</a>
+    <a href="data/zonas.json" download>zonas.json (ranking)</a>
+    <a href="data/kw_listados_venta.csv" download>kw_listados_venta.csv</a>
+    <a href="data/quierocasa_venta.csv" download>quierocasa_venta.csv</a>
+    <a href="data/momotombo_venta.csv" download>momotombo_venta.csv</a>
+  </div>
+  <p>Fuentes: <a href="https://kwnicaragua.kw.com" target="_blank">kwnicaragua.kw.com</a> ·
+  <a href="https://www.quierocasa.com" target="_blank">quierocasa.com</a> ·
+  <a href="https://momotomborealestate.com" target="_blank">momotomborealestate.com</a> ·
+  geocodificación <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap/Nominatim</a>.</p>
+  <p style="margin-top:10px;font-size:12px">Análisis independiente con fines informativos. No constituye avalúo ni oferta de venta.</p>
+</div></footer>
+<button id="volver" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+const LISTADOS = [];
+const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+const fmtK = n => n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : n >= 1e3 ? '$' + Math.round(n/1e3) + 'k' : '$' + Math.round(n);
+const colorPct = t => {
+  const stops = [[0,[37,178,77]],[.25,[166,217,106]],[.5,[254,224,139]],[.75,[252,141,89]],[1,[215,48,39]]];
+  t = Math.max(0, Math.min(1, t));
+  for (let i = 1; i < stops.length; i++) {
+    if (t <= stops[i][0]) {
+      const [t0,c0] = stops[i-1], [t1,c1] = stops[i], f = (t-t0)/(t1-t0);
+      return 'rgb(' + c0.map((c,j) => Math.round(c + (c1[j]-c)*f)).join(',') + ')';
+    }
+  }
+  return 'rgb(215,48,39)';
+};
+const pctDe = (valor, arr) => {
+  const s = [...arr].sort((a,b) => a-b);
+  let i = 0; while (i < s.length && s[i] <= valor) i++;
+  return s.length ? i / s.length : 0;
+};
+const percentile = (arr, q) => {
+  const s = [...arr].sort((a,b) => a-b);
+  return s.length ? s[Math.min(s.length-1, Math.floor(q * s.length))] : 0;
+};
+
+// ---------- mapa ----------
+const mapa = L.map('mapa', {zoomControl: true}).setView([12.13, -86.27], 12);
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, attribution:'© Esri'}).addTo(mapa);
+L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, opacity:.85}).addTo(mapa);
+
+let capaHeat = null, capaClus = null, capaZonas = null;
+
+function activos() {
+  const fuentes = [];
+  if (document.getElementById('f-kw').checked) fuentes.push('kw');
+  if (document.getElementById('f-qc').checked) fuentes.push('qc');
+  if (document.getElementById('f-mb').checked) fuentes.push('mb');
+  return LISTADOS.filter(d => fuentes.includes(d.fuente));
+}
+
+function popupDe(d) {
+  const img = d.img ? `<img src="${d.img}" loading="lazy">` : '';
+  const extra = [];
+  if (d.hab) extra.push(d.hab + ' hab');
+  if (d.banos) extra.push(d.banos + ' baños');
+  if (d.m2) extra.push(Math.round(d.m2) + ' m²');
+  return `<div class="popup">${img}
+    <div class="precio">${fmt(d.p)}</div>
+    <div>${extra.join(' · ') || d.tipo || ''}</div>
+    <div class="z">${d.zona || ''} · ${d.fuente.toUpperCase()}</div>
+    <a href="${d.url}" target="_blank">Ver anuncio original</a></div>`;
+}
+
+function renderMapa() {
+  const ds = activos();
+  if (!ds.length) return;
+  const precios = ds.map(d => d.p);
+  document.getElementById('z-km-lbl').textContent = parseFloat(document.getElementById('z-km').value).toFixed(2) + ' km';
+
+  if (capaHeat) { mapa.removeLayer(capaHeat); capaHeat = null; }
+  if (capaClus) { mapa.removeLayer(capaClus); capaClus = null; }
+  if (capaZonas) { mapa.removeLayer(capaZonas); capaZonas = null; }
+
+  if (document.getElementById('c-heat').checked) {
+    const pts = [];
+    if (document.getElementById('heat-mode').value === 'densidad') {
+      for (const d of ds) pts.push([d.lat, d.lng, .6]);
+    } else {
+      const lo = percentile(precios, .05), hi = percentile(precios, .95);
+      const llo = Math.log(Math.max(lo,1)), lhi = Math.log(Math.max(hi,1.01));
+      for (const d of ds) {
+        const w = Math.max(0, Math.min(1, (Math.log(Math.max(d.p,1)) - llo) / (lhi - llo)));
+        pts.push([d.lat, d.lng, w]);
+      }
+    }
+    capaHeat = L.heatLayer(pts, {radius: 28, blur: 15, maxZoom: 14, minOpacity: .1,
+      gradient: {0.0:'#37b24d',0.3:'#a6d96a',0.5:'#fee08b',0.7:'#fc8d59',0.85:'#e31a1c',1.0:'#ff0000'}}).addTo(mapa);
+  }
+
+  if (document.getElementById('c-clus').checked) {
+    capaClus = L.markerClusterGroup({
+      maxClusterRadius: 55, showCoverageOnHover: false, spiderfyOnMaxZoom: true,
+      iconCreateFunction: clus => {
+        const ps = clus.getAllChildMarkers().map(m => m._precio);
+        const t = pctDe(percentile(ps, .5), precios);
+        return L.divIcon({html:`<div style="background:${colorPct(t)}cc;color:#fff;border-radius:50%;
+          width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+          font-weight:700;font-size:12px;border:2px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.4)">
+          ${clus.getChildCount()}</div>`, className:'', iconSize:[40,40]});
+      }});
+    for (const d of ds) {
+      const t = pctDe(d.p, precios);
+      const m = L.circleMarker([d.lat, d.lng], {radius: 6, weight: 1.5, color: '#ffffff',
+        fillColor: colorPct(t), fillOpacity: .95});
+      m._precio = d.p;
+      m.bindPopup(popupDe(d));
+      capaClus.addLayer(m);
+    }
+    mapa.addLayer(capaClus);
+  }
+
+  if (document.getElementById('c-zonas').checked) {
+    const km = parseFloat(document.getElementById('z-km').value);
+    const dLat = km / 111, dLng = km / (111 * Math.cos(12.13 * Math.PI / 180));
+    const celdas = new Map();
+    for (const d of ds) {
+      const key = Math.floor(d.lat / dLat) + '_' + Math.floor(d.lng / dLng);
+      if (!celdas.has(key)) celdas.set(key, {lat0: Math.floor(d.lat/dLat)*dLat, lng0: Math.floor(d.lng/dLng)*dLng, vals: []});
+      celdas.get(key).vals.push(d.p);
+    }
+    const validas = [...celdas.values()].filter(c => c.vals.length >= 3);
+    capaZonas = L.layerGroup();
+    for (const c of validas) {
+      const med = percentile(c.vals, .5);
+      L.rectangle([[c.lat0, c.lng0], [c.lat0+dLat, c.lng0+dLng]], {
+        color: '#555', weight: 1, fillColor: colorPct(pctDe(med, precios)), fillOpacity: .55
+      }).bindTooltip(`<b>${fmt(med)}</b><br>${c.vals.length} propiedades`, {sticky:true}).addTo(capaZonas);
+    }
+    capaZonas.addTo(mapa);
+  }
+}
+
+// ---------- carga de datos ----------
+async function cargar() {
+  const [stats, zonas, listados] = await Promise.all([
+    fetch('data/stats.json').then(r => r.json()),
+    fetch('data/zonas.json').then(r => r.json()),
+    fetch('data/listados.json').then(r => r.json())
+  ]);
+  LISTADOS.push(...listados);
+
+  const g = stats.global;
+  document.getElementById('statsGlobal').innerHTML =
+    `<div class="c"><b>${g.n.toLocaleString()}</b><span>propiedades en venta</span></div>
+     <div class="c"><b>3</b><span>fuentes consolidadas</span></div>
+     <div class="c"><b>${fmtK(g.media)}</b><span>precio medio</span></div>
+     <div class="c"><b>${fmtK(g.p25)}–${fmtK(g.p75)}</b><span>mitad de las ofertas</span></div>
+     <div class="c"><b>${stats.repetidos}</b><span>repetidos eliminados</span></div>`;
+
+  const filas = (arr) => arr.map(z =>
+    `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
+  document.getElementById('tb-caras').innerHTML = filas(zonas.caras);
+  document.getElementById('tb-baratas').innerHTML = filas(zonas.baratas);
+
+  const caps = [
+    ['01_mapa_calor','Mapa de calor'],
+    ['02_interpretacion_mapa','Interpretación · Mapa'],
+    ['03_consideracion','Consideración importante'],
+    ['04_top10_zonas_caras','Top 10 zonas caras'],
+    ['05_interpretacion_caras','Interpretación · Caras'],
+    ['06_top10_zonas_baratas','Top 10 zonas baratas'],
+    ['07_interpretacion_baratas','Interpretación · Baratas'],
+    ['08_metodologia','Metodología'],
+    ['09_oportunidades_futuras','Oportunidades futuras'],
+  ];
+  document.getElementById('galeria').innerHTML = caps.map(([f, t], i) =>
+    `<figure><img src="slides/${f}.png" alt="${t}" loading="lazy">
+     <figcaption><b>${String(i+1).padStart(2,'0')} · ${t}</b></figcaption></figure>`).join('');
+
+  renderMapa();
+}
+window.addEventListener('scroll', () => {
+  document.getElementById('volver').style.display = window.scrollY > 600 ? 'block' : 'none';
+});
+cargar();
+</script>
+</body>
+</html>
