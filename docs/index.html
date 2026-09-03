@@ -115,6 +115,8 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <label><input type="checkbox" id="c-heat" checked onchange="renderMapa()"> Heatmap</label>
     <label><input type="checkbox" id="c-clus" checked onchange="renderMapa()"> Clusters</label>
     <label><input type="checkbox" id="c-zonas" onchange="renderMapa()"> Zonas</label>
+    <label><input type="checkbox" id="c-cob" onchange="renderMapa()"> Cobertura agencias</label>
+    <label><input type="checkbox" id="c-vac" onchange="renderMapa()"> Zonas poco cubiertas</label>
     <div class="sep"></div>
     <label>Peso:
       <select id="heat-mode" onchange="renderMapa()">
@@ -123,6 +125,15 @@ footer .descargas a:hover{border-color:var(--amarillo)}
       </select>
     </label>
     <label>Tamaño zona: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
+  </div>
+  <div id="leyCob" style="display:none;margin:12px 0;padding:10px 16px;background:var(--panel);
+    border:1px solid #1d2740;border-radius:12px;font-size:13px;color:var(--gris)">
+    <b>Leyenda de cobertura:</b>
+    <span class="chip kw">■ KW</span> ·
+    <span class="chip qc">■ QuieroCasa</span> ·
+    <span class="chip mb">■ Momotombo</span> —
+    celda coloreada por la agencia con más listados allí ·
+    <span style="color:#7a8699">■ gris = zona poco cubierta (sin ofertas registradas)</span>
   </div>
   <div class="aviso" style="border-color:rgba(91,155,213,.5);background:rgba(91,155,213,.08)">
     El heatmap usa escala logarítmica recortada al rango p5–p95 de las propiedades activas. Los colores
@@ -218,7 +229,8 @@ const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
 L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, attribution:'© Esri'}).addTo(mapa);
 L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, opacity:.85}).addTo(mapa);
 
-let capaHeat = null, capaClus = null, capaZonas = null;
+let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null;
+const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC'};
 
 function activos() {
   const fuentes = [];
@@ -250,6 +262,8 @@ function renderMapa() {
   if (capaHeat) { mapa.removeLayer(capaHeat); capaHeat = null; }
   if (capaClus) { mapa.removeLayer(capaClus); capaClus = null; }
   if (capaZonas) { mapa.removeLayer(capaZonas); capaZonas = null; }
+  if (capaCob) { mapa.removeLayer(capaCob); capaCob = null; }
+  if (capaVac) { mapa.removeLayer(capaVac); capaVac = null; }
 
   if (document.getElementById('c-heat').checked) {
     const pts = [];
@@ -259,11 +273,11 @@ function renderMapa() {
       const lo = percentile(precios, .05), hi = percentile(precios, .95);
       const llo = Math.log(Math.max(lo,1)), lhi = Math.log(Math.max(hi,1.01));
       for (const d of ds) {
-        const w = Math.max(0, Math.min(1, (Math.log(Math.max(d.p,1)) - llo) / (lhi - llo)));
-        pts.push([d.lat, d.lng, w]);
+        const lin = Math.max(0, Math.min(1, (Math.log(Math.max(d.p,1)) - llo) / (lhi - llo)));
+        pts.push([d.lat, d.lng, Math.pow(lin, 1.15)]);
       }
     }
-    capaHeat = L.heatLayer(pts, {radius: 28, blur: 15, maxZoom: 14, minOpacity: .1,
+    capaHeat = L.heatLayer(pts, {radius: 28, blur: 15, maxZoom: 16, minOpacity: .1,
       gradient: {0.0:'#37b24d',0.3:'#a6d96a',0.5:'#fee08b',0.7:'#fc8d59',0.85:'#e31a1c',1.0:'#ff0000'}}).addTo(mapa);
   }
 
@@ -307,6 +321,51 @@ function renderMapa() {
       }).bindTooltip(`<b>${fmt(med)}</b><br>${c.vals.length} propiedades`, {sticky:true}).addTo(capaZonas);
     }
     capaZonas.addTo(mapa);
+  }
+
+  const cobOn = document.getElementById('c-cob').checked;
+  const vacOn = document.getElementById('c-vac').checked;
+  document.getElementById('leyCob').style.display = (cobOn || vacOn) ? 'block' : 'none';
+  if (!cobOn && !vacOn) return;
+
+  const km = parseFloat(document.getElementById('z-km').value);
+  const dLat = km / 111, dLng = km / (111 * Math.cos(12.13 * Math.PI / 180));
+  const celdas = new Map();
+  for (const d of ds) {
+    const key = Math.floor(d.lat / dLat) + '_' + Math.floor(d.lng / dLng);
+    if (!celdas.has(key)) celdas.set(key, {lat0: Math.floor(d.lat/dLat)*dLat,
+      lng0: Math.floor(d.lng/dLng)*dLng, kw:0, qc:0, mb:0});
+    celdas.get(key)[d.fuente]++;
+  }
+
+  if (cobOn) {
+    capaCob = L.layerGroup();
+    for (const c of celdas.values()) {
+      const dom = Object.keys(FUENTE_COLOR).reduce((a, b) => c[a] >= c[b] ? a : b);
+      if (!c[dom]) continue;
+      L.rectangle([[c.lat0, c.lng0], [c.lat0+dLat, c.lng0+dLng]], {
+        color: FUENTE_COLOR[dom], weight: 1, fillColor: FUENTE_COLOR[dom], fillOpacity: .28
+      }).bindTooltip(`<b>${dom.toUpperCase()}</b>: ${c[dom]}<br>KW: ${c.kw} · QuieroCasa: ${c.qc} · Momotombo: ${c.mb}`, {sticky:true}).addTo(capaCob);
+    }
+    capaCob.addTo(mapa);
+  }
+
+  if (vacOn) {
+    const minLat = Math.floor(Math.min(...ds.map(d => d.lat)) / dLat) * dLat;
+    const maxLat = (Math.floor(Math.max(...ds.map(d => d.lat)) / dLat) + 1) * dLat;
+    const minLng = Math.floor(Math.min(...ds.map(d => d.lng)) / dLng) * dLng;
+    const maxLng = (Math.floor(Math.max(...ds.map(d => d.lng)) / dLng) + 1) * dLng;
+    capaVac = L.layerGroup();
+    for (let la = minLat; la < maxLat; la += dLat) {
+      for (let ln = minLng; ln < maxLng; ln += dLng) {
+        const key = Math.floor(la / dLat) + '_' + Math.floor(ln / dLng);
+        if (celdas.has(key)) continue;
+        L.rectangle([[la, ln], [la+dLat, ln+dLng]], {
+          color: '#5a6473', weight: 1, dashArray: '4 4', fillColor: '#5a6473', fillOpacity: .22
+        }).bindTooltip('Zona poco cubierta: sin ofertas registradas en estas fuentes', {sticky:true}).addTo(capaVac);
+      }
+    }
+    capaVac.addTo(mapa);
   }
 }
 
