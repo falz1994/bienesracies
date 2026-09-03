@@ -9,7 +9,7 @@ consolidando **tres fuentes inmobiliarias**:
 | [QuieroCasa](https://www.quierocasa.com) | HTML server-rendered | ❌ geocodificadas (Nominatim) |
 | [Momotombo](https://momotomborealestate.com) | WordPress/Houzez, HTML | ❌ geocodificadas (Nominatim) |
 
-**Qué contiene el sitio (`index.html`):**
+**Qué contiene el sitio (`docs/index.html`, raíz de Vercel = `docs`):**
 - Mapa de calor interactivo (precio / densidad) con clusters y cuadrícula de zonas
 - Filtros por fuente (KW / QuieroCasa / Momotombo)
 - Top 10 zonas más caras y más baratas (por promedio de venta)
@@ -17,7 +17,7 @@ consolidando **tres fuentes inmobiliarias**:
 - Metodología, consideraciones (sesgo de selección) y oportunidades futuras
 
 **Datos disponibles para uso dinámico (`data/`):**
-- `listados.json` — 1,481 propiedades consolidadas: precio, lat/lng, zona, tipo,
+- `data/listados.json` — 1,481 propiedades consolidadas: precio, lat/lng, zona, tipo,
   habitaciones, baños, m², URL del anuncio, imagen, fuente
 - `stats.json` — estadísticas globales y por fuente (n, media, p25, p75, p5, p95)
 - `zonas.json` — ranking de zonas caras/baratas (promedio, mediana, nº de listados)

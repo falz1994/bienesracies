@@ -104,10 +104,10 @@ def main():
     unicos, dups = dedupe(items)
     print(f"total={len(items)} únicos={len(unicos)} repetidos={dups}")
 
-    os.makedirs(f"{REPO}/data", exist_ok=True)
-    os.makedirs(f"{REPO}/slides", exist_ok=True)
+    os.makedirs(f"{REPO}/docs/data", exist_ok=True)
+    os.makedirs(f"{REPO}/docs/slides", exist_ok=True)
 
-    with open(f"{REPO}/data/listados.json", "w", encoding="utf-8") as f:
+    with open(f"{REPO}/docs/data/listados.json", "w", encoding="utf-8") as f:
         json.dump(unicos, f, ensure_ascii=False, separators=(",", ":"))
 
     # stats por fuente + global
@@ -121,7 +121,7 @@ def main():
                   "qc": stats([x for x in unicos if x["fuente"] == "qc"]),
                   "mb": stats([x for x in unicos if x["fuente"] == "mb"]),
                   "repetidos": dups}
-    with open(f"{REPO}/data/stats.json", "w", encoding="utf-8") as f:
+    with open(f"{REPO}/docs/data/stats.json", "w", encoding="utf-8") as f:
         json.dump(stats_json, f, ensure_ascii=False, indent=1)
 
     # ranking de zonas (misma lógica del pipeline, con geocodificación cacheada)
@@ -133,15 +133,15 @@ def main():
                        for z, n, p, m in caras],
              "baratas": [{"zona": z, "n": n, "promedio": round(p), "mediana": round(m)}
                          for z, n, p, m in baratas]}
-    with open(f"{REPO}/data/zonas.json", "w", encoding="utf-8") as f:
+    with open(f"{REPO}/docs/data/zonas.json", "w", encoding="utf-8") as f:
         json.dump(zonas, f, ensure_ascii=False, indent=1)
 
     # CSVs para descarga + slides
     for nombre in ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv"):
-        shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/data/{nombre}")
+        shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/docs/data/{nombre}")
     for png in sorted(os.listdir(f"{ANALISIS}/slides")):
         if png.endswith(".png"):
-            shutil.copy(f"{ANALISIS}/slides/{png}", f"{REPO}/slides/{png}")
+            shutil.copy(f"{ANALISIS}/slides/{png}", f"{REPO}/docs/slides/{png}")
     print("data/ y slides/ listos")
     print("zonas caras:", [z[0] for z in caras[:5]])
     print("zonas baratas:", [z[0] for z in baratas[:5]])
