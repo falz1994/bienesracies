@@ -1,6 +1,6 @@
 """Genera los datos estáticos del sitio (data/*.json) desde el pipeline de análisis.
 
-Fuentes: KW Nicaragua, QuieroCasa y Momotombo (venta, Managua + Ciudad Sandino + Ticuantepe).
+Fuentes: KW Nicaragua, QuieroCasa, Momotombo y Sovinic (venta, Managua + Ciudad Sandino + Ticuantepe).
 Uso: python3 generar_datos.py   (requiere los CSVs en /home/devni/analisis bienes raices/)
 """
 import csv
