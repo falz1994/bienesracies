@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bienes Raíces Managua · Análisis de precios de vivienda</title>
-<meta name="description" content="Análisis de precios de casas en venta en el Área Metropolitana de Managua con datos de KW Nicaragua, QuieroCasa y Momotombo: mapa de calor, zonas más caras y baratas.">
+<meta name="description" content="Análisis de precios de casas en venta en el Área Metropolitana de Managua con datos de KW Nicaragua, QuieroCasa, Momotombo y Sovinic: mapa de calor, zonas más caras y baratas.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
@@ -64,11 +64,27 @@ h2 .tag{color:var(--amarillo)}
 .tabla tr:last-child td{border-bottom:none}
 .tabla td:last-child, .tabla th:last-child{text-align:right;font-weight:700}
 .tabla td:nth-child(3){text-align:right}
-.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.galeria figure{background:var(--panel);border:1px solid #1d2740;border-radius:14px;overflow:hidden}
-.galeria img{width:100%;display:block}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.galeria figure{background:var(--panel);border:1px solid #1d2740;border-radius:14px;overflow:hidden;
+  cursor:pointer;transition:transform .15s,border-color .15s;margin:0}
+.galeria figure:hover{transform:translateY(-3px);border-color:var(--amarillo)}
+.galeria img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover;object-position:top}
 .galeria figcaption{padding:10px 14px;color:var(--gris);font-size:13px}
 .galeria figcaption b{color:var(--txt)}
+#lightbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(5,9,18,.95);
+  flex-direction:column;align-items:center;justify-content:center;padding:18px}
+#lightbox.open{display:flex}
+#lb-img{max-height:78vh;max-width:min(94vw,540px);border-radius:12px;
+  box-shadow:0 10px 44px rgba(0,0,0,.65)}
+.lb-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:14px}
+.lb-btn{background:var(--panel);border:1px solid #1d2740;color:var(--txt);border-radius:10px;
+  padding:9px 16px;font-size:14px;cursor:pointer;text-decoration:none}
+.lb-btn:hover{border-color:var(--amarillo)}
+#lb-tit{color:var(--txt);font-size:15px;margin-top:10px;text-align:center;font-weight:600}
+#lb-pos{color:var(--gris);font-size:13px}
+.lb-x{position:absolute;top:14px;right:20px;background:none;border:none;color:var(--gris);
+  font-size:34px;line-height:1;cursor:pointer}
+.lb-x:hover{color:var(--txt)}
 .met{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .met .c{background:var(--panel);border:1px solid #1d2740;border-top:3px solid var(--azul);border-radius:14px;padding:18px}
 .met .c.amarillo{border-top-color:var(--amarillo)}
@@ -95,6 +111,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <a href="#stats">Estadísticas</a>
   <a href="#mapa-sec">Mapa</a>
   <a href="#zonas">Zonas</a>
+  <a href="#slides">Slides</a>
   <a href="#metodologia">Metodología</a>
   <a href="#descargas">Descargas</a>
 </div></nav>
@@ -179,6 +196,13 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   </div>
 </div></section>
 
+<section id="slides"><div class="wrap">
+  <h2>Slides del <span class="tag">análisis</span></h2>
+  <p class="sub">La presentación completa en 9 láminas (formato vertical). Toca cualquiera para verla
+  en grande y navegar con las flechas ← → o las teclas del teclado.</p>
+  <div class="galeria" id="gal-slides"></div>
+</div></section>
+
 <section id="gob"><div class="wrap">
   <h2>Urbanizaciones <span class="tag">del Gobierno</span></h2>
   <p class="sub">Programas Bismarck Martínez (Alcaldía de Managua) y Nuevas Victorias (INVUR). Investigación web
@@ -225,6 +249,18 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <p style="margin-top:10px;font-size:12px">Análisis independiente con fines informativos. No constituye avalúo ni oferta de venta.</p>
 </div></footer>
 <button id="volver" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-x" aria-label="Cerrar" onclick="cierraLb()">×</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-tit"></div>
+  <div class="lb-bar">
+    <button class="lb-btn" onclick="navegaLb(-1)">← Anterior</button>
+    <span id="lb-pos"></span>
+    <button class="lb-btn" onclick="navegaLb(1)">Siguiente →</button>
+    <a class="lb-btn" id="lb-dl" href="#" download>Descargar PNG</a>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
@@ -421,6 +457,55 @@ function renderMapa() {
     capaVac.addTo(mapa);
   }
 }
+
+// ---------- slides ----------
+const SLIDES = [
+  ['01_mapa_calor.png', 'Mapa de calor de precios'],
+  ['02_interpretacion_mapa.png', 'Interpretación · Mapa de calor'],
+  ['03_consideracion.png', 'Consideración importante'],
+  ['04_top10_zonas_caras.png', 'Las 10 zonas más caras'],
+  ['05_interpretacion_caras.png', 'Interpretación · Zonas más caras'],
+  ['06_top10_zonas_baratas.png', 'Las 10 zonas más baratas'],
+  ['07_interpretacion_baratas.png', 'Interpretación · Zonas más baratas'],
+  ['08_metodologia.png', 'Metodología'],
+  ['09_oportunidades_futuras.png', 'Oportunidades futuras'],
+];
+let lbIdx = 0;
+document.getElementById('gal-slides').innerHTML = SLIDES.map(([archivo, titulo], i) =>
+  `<figure onclick="abreLb(${i})"><img src="slides/${archivo}" loading="lazy" alt="${titulo}">
+   <figcaption><b>${String(i + 1).padStart(2, '0')}</b> · ${titulo}</figcaption></figure>`).join('');
+
+function pintaLb() {
+  const [archivo, titulo] = SLIDES[lbIdx];
+  document.getElementById('lb-img').src = 'slides/' + archivo;
+  document.getElementById('lb-img').alt = titulo;
+  document.getElementById('lb-tit').textContent = titulo;
+  document.getElementById('lb-pos').textContent = `${lbIdx + 1} / ${SLIDES.length}`;
+  document.getElementById('lb-dl').href = 'slides/' + archivo;
+}
+function abreLb(i) {
+  lbIdx = i;
+  pintaLb();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function cierraLb() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function navegaLb(d) {
+  lbIdx = (lbIdx + d + SLIDES.length) % SLIDES.length;
+  pintaLb();
+}
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target.id === 'lightbox') cierraLb();
+});
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') cierraLb();
+  if (e.key === 'ArrowLeft') navegaLb(-1);
+  if (e.key === 'ArrowRight') navegaLb(1);
+});
 
 // ---------- carga de datos ----------
 async function cargar() {
