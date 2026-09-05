@@ -206,11 +206,11 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   </div>
   <div class="zonas-col">
     <div class="tabla"><h3><span class="rojo">🔴 Las 10 zonas más caras</span></h3>
-      <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
+      <table><thead><tr id="th-caras"><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
       <tbody id="tb-caras"></tbody></table>
     </div>
     <div class="tabla"><h3><span class="verde">🟢 Las 10 zonas más baratas</span></h3>
-      <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
+      <table><thead><tr id="th-baratas"><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
       <tbody id="tb-baratas"></tbody></table>
     </div>
   </div>
@@ -425,6 +425,7 @@ function renderMapa() {
         .map(([k, ps]) => ({distrito: k, n: ps.length,
           promedio: ps.reduce((a, b) => a + b, 0) / ps.length}));
       const promedios = stats.map(s => s.promedio);
+      const totalAct = ds.length;
       capaZonas = L.layerGroup();
       for (const f of DIST_POLYS) {
         const st = stats.find(s => s.distrito === f.properties.nombre);
@@ -433,9 +434,10 @@ function renderMapa() {
         const rings = f.geometry.type === 'Polygon' ? [f.geometry.coordinates]
           : f.geometry.coordinates;
         const latlngs = rings.map(poly => poly.map(ring => ring.map(([x, y]) => [y, x])));
+        const pctVol = totalAct ? (st.n / totalAct * 100).toFixed(1) : '0';
         L.polygon(latlngs, {color: '#e6ecf7', weight: 2, fillColor: col, fillOpacity: .55})
-         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados`,
-                      {sticky: true}).addTo(capaZonas);
+         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados ` +
+                      `(${pctVol}% del volumen)`, {sticky: true}).addTo(capaZonas);
       }
       capaZonas.addTo(mapa);
     } else {
@@ -599,15 +601,21 @@ const tablaDistritos = () => {
   return {caras, baratas};
 };
 function setTabla(u) {
-  const filas = (arr) => arr.map(z =>
-    `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
+  const totalCasas = LISTADOS.filter(d => d.casa !== false).length || 1;
+  const fila = (z, pct) =>
+    `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td>` +
+    (pct ? `<td style="color:var(--gris)">${(z.n / totalCasas * 100).toFixed(1)}%</td>` : '') + '</tr>';
+  const cab = (pct) => `<th>Zona</th><th>Listados</th><th>Promedio</th>` +
+    (pct ? '<th title="participación de listados sobre el total de casas">% Vol</th>' : '');
   const d = u === 'distritos' ? tablaDistritos() : ZONAS_BARRIO;
-  document.getElementById('tb-caras').innerHTML = filas(d.caras);
-  document.getElementById('tb-baratas').innerHTML = filas(d.baratas);
+  document.getElementById('tb-caras').innerHTML = d.caras.map(z => fila(z, u === 'distritos')).join('');
+  document.getElementById('tb-baratas').innerHTML = d.baratas.map(z => fila(z, u === 'distritos')).join('');
+  document.getElementById('th-caras').innerHTML = cab(u === 'distritos');
+  document.getElementById('th-baratas').innerHTML = cab(u === 'distritos');
   document.getElementById('t-btn-barrio').classList.toggle('activo', u === 'barrio');
   document.getElementById('t-btn-distrito').classList.toggle('activo', u === 'distritos');
   document.getElementById('sub-zonas').innerHTML = u === 'distritos'
-    ? 'Ranking por promedio de venta <b>por distrito de Managua</b> (solo casas; los listados fuera de los distritos I–VII se agrupan por municipio).'
+    ? 'Ranking por promedio de venta <b>por distrito de Managua</b> (solo casas; los listados fuera de los distritos I–VII se agrupan por municipio). "% Vol" = participación de listados del distrito sobre el total de casas.'
     : 'Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.';
 }
 
