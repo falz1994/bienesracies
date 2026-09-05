@@ -15,7 +15,7 @@ REPO = os.path.dirname(os.path.abspath(__file__))
 ANALISIS = "/home/devni/analisis bienes raices"
 sys.path.insert(0, ANALISIS)
 
-from clasificador_casas import kw_es_casa, qc_es_casa, mb_es_casa, sv_es_casa
+from clasificador_casas import kw_es_casa, qc_es_casa, mb_es_casa, sv_es_casa, dn_es_casa
 
 MANAGUA_OK = {"managua", "ciudad sandino", "ticuantepe"}
 BBOX = {"s": 11.98, "n": 12.26, "o": -86.48, "e": -86.10}
@@ -104,6 +104,22 @@ def sv_rows():
                "casa": sv_es_casa(r)}
 
 
+def dn_rows():
+    for r in csv.DictReader(open(f"{ANALISIS}/discovernica_venta.csv", encoding="utf-8-sig")):
+        m = (r.get("municipio") or "").strip().lower()
+        d = (r.get("departamento") or "").strip().lower()
+        if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
+            continue
+        if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
+            continue
+        yield {"id": "dn" + r["id"], "fuente": "dn", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
+               "p": _f(r["precio"]), "zona": (r["zona"] or "").strip().title(),
+               "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["m2"]),
+               "lote": _f(r["lote_vrs"]), "tipo": "Casa", "url": r["url"], "img": r["imagen"],
+               "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or "",
+               "casa": dn_es_casa(r)}
+
+
 def dedupe(items):
     out, dups = [], 0
     vistos = set()
@@ -120,10 +136,11 @@ def dedupe(items):
 
 
 def main():
-    items = list(kw_rows()) + list(qc_rows()) + list(mb_rows()) + list(sv_rows())
+    items = list(kw_rows()) + list(qc_rows()) + list(mb_rows()) + list(sv_rows()) + \
+        list(dn_rows())
     unicos, dups = dedupe(items)
     print(f"total={len(items)} únicos={len(unicos)} repetidos={dups}")
-    for f in ("kw", "qc", "mb", "sv"):
+    for f in ("kw", "qc", "mb", "sv", "dn"):
         filas_f = [x for x in unicos if x["fuente"] == f]
         print(f"  {f}: {len(filas_f)} listados → {sum(1 for x in filas_f if x['casa'])} casas")
 
@@ -149,8 +166,9 @@ def main():
                   "qc": stats([x for x in unicos if x["fuente"] == "qc"]),
                   "mb": stats([x for x in unicos if x["fuente"] == "mb"]),
                   "sv": stats([x for x in unicos if x["fuente"] == "sv"]),
+                  "dn": stats([x for x in unicos if x["fuente"] == "dn"]),
                   "casas_fuente": {f: sum(1 for x in unicos if x["fuente"] == f and x["casa"])
-                                   for f in ("kw", "qc", "mb", "sv")},
+                                   for f in ("kw", "qc", "mb", "sv", "dn")},
                   "repetidos": dups}
     with open(f"{REPO}/docs/data/stats.json", "w", encoding="utf-8") as f:
         json.dump(stats_json, f, ensure_ascii=False, indent=1)
@@ -171,7 +189,7 @@ def main():
 
     # CSVs para descarga + slides
     for nombre in ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv",
-                   "sovinic_venta.csv"):
+                   "sovinic_venta.csv", "discovernica_venta.csv"):
         shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/docs/data/{nombre}")
     for png in sorted(os.listdir(f"{ANALISIS}/slides")):
         if png.endswith(".png"):

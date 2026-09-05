@@ -2,9 +2,9 @@
  "caras": [
   {
    "zona": "Villa Fontana Sur",
-   "n": 8,
-   "promedio": 579638,
-   "mediana": 453000
+   "n": 9,
+   "promedio": 670789,
+   "mediana": 556000
   },
   {
    "zona": "& Renta Santo Domingo",
@@ -13,22 +13,34 @@
    "mediana": 560000
   },
   {
+   "zona": "Villa Fontana",
+   "n": 31,
+   "promedio": 491213,
+   "mediana": 375000
+  },
+  {
+   "zona": "Édgard Lang 2",
+   "n": 90,
+   "promedio": 482339,
+   "mediana": 294000
+  },
+  {
+   "zona": "Santo Domingo",
+   "n": 87,
+   "promedio": 459896,
+   "mediana": 395000
+  },
+  {
    "zona": "& Renta Carretera Sur",
    "n": 4,
    "promedio": 456000,
    "mediana": 362500
   },
   {
-   "zona": "Santo Domingo",
-   "n": 80,
-   "promedio": 441644,
-   "mediana": 382500
-  },
-  {
-   "zona": "Villa Fontana",
-   "n": 23,
-   "promedio": 441200,
-   "mediana": 375000
+   "zona": "Altos de Santo Domingo",
+   "n": 7,
+   "promedio": 385829,
+   "mediana": 399000
   },
   {
    "zona": "Las Colinas",
@@ -38,30 +50,30 @@
   },
   {
    "zona": "Los Robles",
-   "n": 9,
-   "promedio": 367778,
-   "mediana": 370000
-  },
-  {
-   "zona": "Altos de Santo Domingo",
-   "n": 6,
-   "promedio": 345133,
-   "mediana": 379500
+   "n": 12,
+   "promedio": 366983,
+   "mediana": 372500
   },
   {
    "zona": "Las Cumbres",
    "n": 10,
    "promedio": 334500,
    "mediana": 285000
-  },
-  {
-   "zona": "Jardines de Managua",
-   "n": 51,
-   "promedio": 313617,
-   "mediana": 260000
   }
  ],
  "baratas": [
+  {
+   "zona": "Zona Residencial",
+   "n": 4,
+   "promedio": 90875,
+   "mediana": 72500
+  },
+  {
+   "zona": "Las Brisas",
+   "n": 4,
+   "promedio": 91225,
+   "mediana": 112000
+  },
   {
    "zona": "Sector Lago",
    "n": 9,
@@ -69,16 +81,22 @@
    "mediana": 79700
   },
   {
-   "zona": "Linda Vista",
-   "n": 3,
-   "promedio": 113333,
-   "mediana": 95000
+   "zona": "Ciudad Sandino",
+   "n": 4,
+   "promedio": 117500,
+   "mediana": 80000
   },
   {
    "zona": "Barrio la Primavera",
-   "n": 7,
-   "promedio": 124429,
-   "mediana": 90000
+   "n": 10,
+   "promedio": 120300,
+   "mediana": 83500
+  },
+  {
+   "zona": "Altamira",
+   "n": 5,
+   "promedio": 124000,
+   "mediana": 125000
   },
   {
    "zona": "Las Rosaledas",
@@ -87,10 +105,10 @@
    "mediana": 125000
   },
   {
-   "zona": "Ticuantepe",
-   "n": 12,
-   "promedio": 125771,
-   "mediana": 113750
+   "zona": "Bello Horizonte",
+   "n": 3,
+   "promedio": 125933,
+   "mediana": 110000
   },
   {
    "zona": "Las Jaguitas",
@@ -103,24 +121,6 @@
    "n": 3,
    "promedio": 129333,
    "mediana": 140000
-  },
-  {
-   "zona": "Altamira",
-   "n": 3,
-   "promedio": 136667,
-   "mediana": 125000
-  },
-  {
-   "zona": "Monseñor Lezcano",
-   "n": 6,
-   "promedio": 148333,
-   "mediana": 86000
-  },
-  {
-   "zona": "Veracruz",
-   "n": 13,
-   "promedio": 152754,
-   "mediana": 129000
   }
  ]
 }

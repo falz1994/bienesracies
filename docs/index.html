@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bienes Raíces Managua · Análisis de precios de vivienda</title>
-<meta name="description" content="Análisis de precios de casas en venta en el Área Metropolitana de Managua con datos de KW Nicaragua, QuieroCasa, Momotombo y Sovinic: mapa de calor, zonas más caras y baratas.">
+<meta name="description" content="Análisis de precios de casas en venta en el Área Metropolitana de Managua con datos de KW Nicaragua, QuieroCasa, Momotombo, Sovinic y Discover Real Estate: mapa de calor, zonas más caras y baratas.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
@@ -53,6 +53,7 @@ h2 .tag{color:var(--amarillo)}
 .ctrl-items input[type=range]{width:120px;accent-color:var(--amarillo)}
 .chip{font-weight:700}
 .chip.kw{color:#F2C14E}.chip.qc{color:#5B9BD5}.chip.mb{color:#C9A0DC}.chip.sv{color:#FF8C42}
+.chip.dn{color:#D65DB1}
 .zonas-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:800px){.zonas-col{grid-template-columns:1fr}}
 .tabla{background:var(--panel);border:1px solid #1d2740;border-radius:14px;padding:18px 20px}
@@ -119,7 +120,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
 
 <header class="hero"><div class="wrap">
   <h1>Análisis de precios de <span>casas en venta</span><br>en el Área Metropolitana de Managua</h1>
-  <p><span id="heroNums">—</span> de KW Nicaragua, QuieroCasa, Momotombo y Sovinic · consolidado, geocodificado y deduplicado<br>
+  <p><span id="heroNums">—</span> de KW Nicaragua, QuieroCasa, Momotombo, Sovinic y Discover Real Estate · consolidado, geocodificado y deduplicado<br>
   <span style="font-size:14px">Datos extraídos el <b id="fechaExt" style="color:var(--amarillo)">—</b></span></p>
   <div class="bigstats" id="statsGlobal"></div>
   <div class="aviso"><b>⚠️ Consideración importante:</b> estos portales muestran el <b>segmento formal
@@ -140,6 +141,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
         <label><input type="checkbox" id="f-qc" checked onchange="renderMapa()"> <span class="chip qc">QuieroCasa</span></label>
         <label><input type="checkbox" id="f-mb" checked onchange="renderMapa()"> <span class="chip mb">Momotombo</span></label>
         <label><input type="checkbox" id="f-sv" checked onchange="renderMapa()"> <span class="chip sv">Sovinic</span></label>
+        <label><input type="checkbox" id="f-dn" checked onchange="renderMapa()"> <span class="chip dn">Discover</span></label>
       </div>
     </div>
     <div class="ctrl-group">
@@ -172,7 +174,8 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <span class="chip kw">■ KW</span> ·
     <span class="chip qc">■ QuieroCasa</span> ·
     <span class="chip mb">■ Momotombo</span> ·
-    <span class="chip sv">■ Sovinic</span> —
+    <span class="chip sv">■ Sovinic</span> ·
+    <span class="chip dn">■ Discover</span> —
     celda coloreada por la agencia con más listados allí ·
     <span style="color:#c7d0e0">▨ rayadas = <b>zona poco cubierta</b> — sin ofertas del mercado formal <b id="vacN"></b></span> ·
     <span style="color:#2DD4BF">● turquesa = urbanización del Gobierno</span>
@@ -210,7 +213,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <h2>Urbanizaciones <span class="tag">del Gobierno</span></h2>
   <p class="sub">Programas Bismarck Martínez (Alcaldía de Managua) y Nuevas Victorias (INVUR). Investigación web
   (Alcaldía de Managua, Canal 4, TN8, El 19 Digital, Confidencial) + geocodificación por nombre con OSM/Overpass.
-  La columna "portales" cuenta los listados de KW/QuieroCasa/Momotombo/Sovinic a menos de 1.3 km: ahí se ven las
+  La columna "portales" cuenta los listados de KW/QuieroCasa/Momotombo/Sovinic/Discover a menos de 1.3 km: ahí se ven las
   <b>celdas en blanco</b> del mercado formal.</p>
   <div class="tabla"><table>
     <thead><tr><th>Urbanización</th><th>Programa</th><th>Viviendas</th><th>Ubicación</th><th>Portales</th></tr></thead>
@@ -243,11 +246,13 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <a href="data/quierocasa_venta.csv" download>quierocasa_venta.csv</a>
     <a href="data/momotombo_venta.csv" download>momotombo_venta.csv</a>
     <a href="data/sovinic_venta.csv" download>sovinic_venta.csv</a>
+    <a href="data/discovernica_venta.csv" download>discovernica_venta.csv</a>
   </div>
   <p>Fuentes: <a href="https://kwnicaragua.kw.com" target="_blank">kwnicaragua.kw.com</a> ·
   <a href="https://www.quierocasa.com" target="_blank">quierocasa.com</a> ·
   <a href="https://momotomborealestate.com" target="_blank">momotomborealestate.com</a> ·
   <a href="https://www.sovinic.com.ni" target="_blank">sovinic.com.ni</a> ·
+  <a href="https://discovernica.com" target="_blank">discovernica.com</a> ·
   geocodificación <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap/Nominatim</a>.</p>
   <p style="margin-top:10px;font-size:12px">Análisis independiente con fines informativos. No constituye avalúo ni oferta de venta.</p>
 </div></footer>
@@ -313,7 +318,7 @@ svgOverlay.appendChild(defsRayas);
 
 let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null, capaGob = null;
 const PROG_GOB = [];
-const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC', sv:'#FF8C42'};
+const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC', sv:'#FF8C42', dn:'#D65DB1'};
 
 function activos() {
   const fuentes = [];
@@ -321,6 +326,7 @@ function activos() {
   if (document.getElementById('f-qc').checked) fuentes.push('qc');
   if (document.getElementById('f-mb').checked) fuentes.push('mb');
   if (document.getElementById('f-sv').checked) fuentes.push('sv');
+  if (document.getElementById('f-dn').checked) fuentes.push('dn');
   const soloCasas = document.getElementById('c-casa').checked;
   return LISTADOS.filter(d => fuentes.includes(d.fuente) && (!soloCasas || d.casa !== false));
 }
@@ -439,7 +445,7 @@ function renderMapa() {
   for (const d of ds) {
     const key = Math.floor(d.lat / dLat) + '_' + Math.floor(d.lng / dLng);
     if (!celdas.has(key)) celdas.set(key, {lat0: Math.floor(d.lat/dLat)*dLat,
-      lng0: Math.floor(d.lng/dLng)*dLng, kw:0, qc:0, mb:0, sv:0});
+      lng0: Math.floor(d.lng/dLng)*dLng, kw:0, qc:0, mb:0, sv:0, dn:0});
     celdas.get(key)[d.fuente]++;
   }
 
@@ -450,7 +456,7 @@ function renderMapa() {
       if (!c[dom]) continue;
       L.rectangle([[c.lat0, c.lng0], [c.lat0+dLat, c.lng0+dLng]], {
         color: FUENTE_COLOR[dom], weight: 1, fillColor: FUENTE_COLOR[dom], fillOpacity: .28
-      }).bindTooltip(`<b>${dom.toUpperCase()}</b>: ${c[dom]}<br>KW: ${c.kw} · QuieroCasa: ${c.qc} · Momotombo: ${c.mb} · Sovinic: ${c.sv}`, {sticky:true}).addTo(capaCob);
+      }).bindTooltip(`<b>${dom.toUpperCase()}</b>: ${c[dom]}<br>KW: ${c.kw} · QuieroCasa: ${c.qc} · Momotombo: ${c.mb} · Sovinic: ${c.sv} · Discover: ${c.dn}`, {sticky:true}).addTo(capaCob);
     }
     capaCob.addTo(mapa);
   }
@@ -552,7 +558,7 @@ async function cargar() {
   document.getElementById('statsGlobal').innerHTML =
      `<div class="c"><b>${cs.n.toLocaleString()}</b><span>casas en venta (filtro principal)</span></div>
       <div class="c"><b>${g.n.toLocaleString()}</b><span>listados totales con terrenos y locales</span></div>
-      <div class="c"><b>4</b><span>fuentes consolidadas</span></div>
+      <div class="c"><b>5</b><span>fuentes consolidadas</span></div>
       <div class="c"><b>${fmtK(cs.media)}</b><span>precio medio de casa</span></div>
       <div class="c"><b>${fmtK(cs.p25)}–${fmtK(cs.p75)}</b><span>mitad de las casas</span></div>
       <div class="c"><b>${stats.repetidos}</b><span>repetidos eliminados</span></div>`;
