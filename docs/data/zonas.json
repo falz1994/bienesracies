@@ -1,34 +1,10 @@
 {
  "caras": [
   {
-   "zona": "Motastepe",
-   "n": 5,
-   "promedio": 1260200,
-   "mediana": 495000
-  },
-  {
-   "zona": "Sector Norte Comarca los Ladinos",
+   "zona": "Villa Fontana Sur",
    "n": 8,
-   "promedio": 1001288,
-   "mediana": 532044
-  },
-  {
-   "zona": "Barrio Waspán Norte",
-   "n": 13,
-   "promedio": 712964,
-   "mediana": 215000
-  },
-  {
-   "zona": "Las Cumbres",
-   "n": 14,
-   "promedio": 616597,
-   "mediana": 285000
-  },
-  {
-   "zona": "Balcones de Santo Domingo",
-   "n": 6,
-   "promedio": 599733,
-   "mediana": 542500
+   "promedio": 579638,
+   "mediana": 453000
   },
   {
    "zona": "& Renta Santo Domingo",
@@ -37,37 +13,55 @@
    "mediana": 560000
   },
   {
-   "zona": "Villa Fontana Sur",
-   "n": 10,
-   "promedio": 522710,
-   "mediana": 412500
-  },
-  {
    "zona": "& Renta Carretera Sur",
    "n": 4,
    "promedio": 456000,
    "mediana": 362500
   },
   {
-   "zona": "Altamira",
-   "n": 5,
-   "promedio": 441000,
-   "mediana": 165000
+   "zona": "Santo Domingo",
+   "n": 80,
+   "promedio": 441644,
+   "mediana": 382500
   },
   {
-   "zona": "Santo Domingo",
-   "n": 132,
-   "promedio": 423456,
-   "mediana": 333000
+   "zona": "Villa Fontana",
+   "n": 23,
+   "promedio": 441200,
+   "mediana": 375000
+  },
+  {
+   "zona": "Las Colinas",
+   "n": 41,
+   "promedio": 371187,
+   "mediana": 310000
+  },
+  {
+   "zona": "Los Robles",
+   "n": 9,
+   "promedio": 367778,
+   "mediana": 370000
+  },
+  {
+   "zona": "Altos de Santo Domingo",
+   "n": 6,
+   "promedio": 345133,
+   "mediana": 379500
+  },
+  {
+   "zona": "Las Cumbres",
+   "n": 10,
+   "promedio": 334500,
+   "mediana": 285000
+  },
+  {
+   "zona": "Jardines de Managua",
+   "n": 51,
+   "promedio": 313617,
+   "mediana": 260000
   }
  ],
  "baratas": [
-  {
-   "zona": "Villa Carolina",
-   "n": 5,
-   "promedio": 107000,
-   "mediana": 120000
-  },
   {
    "zona": "Sector Lago",
    "n": 9,
@@ -75,28 +69,34 @@
    "mediana": 79700
   },
   {
-   "zona": "Batahola Norte",
-   "n": 3,
-   "promedio": 113000,
-   "mediana": 120000
-  },
-  {
-   "zona": "Ciudad Sandino",
-   "n": 3,
-   "promedio": 123333,
-   "mediana": 60000
-  },
-  {
-   "zona": "Veracruz",
-   "n": 22,
-   "promedio": 128259,
-   "mediana": 87500
-  },
-  {
    "zona": "Linda Vista",
+   "n": 3,
+   "promedio": 113333,
+   "mediana": 95000
+  },
+  {
+   "zona": "Barrio la Primavera",
+   "n": 7,
+   "promedio": 124429,
+   "mediana": 90000
+  },
+  {
+   "zona": "Las Rosaledas",
    "n": 4,
-   "promedio": 128750,
-   "mediana": 135000
+   "promedio": 125000,
+   "mediana": 125000
+  },
+  {
+   "zona": "Ticuantepe",
+   "n": 12,
+   "promedio": 125771,
+   "mediana": 113750
+  },
+  {
+   "zona": "Las Jaguitas",
+   "n": 5,
+   "promedio": 127720,
+   "mediana": 129900
   },
   {
    "zona": "Sierras Doradas",
@@ -105,22 +105,22 @@
    "mediana": 140000
   },
   {
-   "zona": "Monseñor Lezcano",
-   "n": 7,
-   "promedio": 135714,
-   "mediana": 85000
-  },
-  {
-   "zona": "Montoya",
-   "n": 4,
-   "promedio": 155000,
-   "mediana": 127500
-  },
-  {
-   "zona": "Monte Tabor",
+   "zona": "Altamira",
    "n": 3,
-   "promedio": 178333,
+   "promedio": 136667,
    "mediana": 125000
+  },
+  {
+   "zona": "Monseñor Lezcano",
+   "n": 6,
+   "promedio": 148333,
+   "mediana": 86000
+  },
+  {
+   "zona": "Veracruz",
+   "n": 13,
+   "promedio": 152754,
+   "mediana": 129000
   }
  ]
 }

@@ -7,6 +7,7 @@ import csv
 import datetime
 import json
 import os
+import re
 import shutil
 import statistics
 import sys
@@ -17,6 +18,65 @@ sys.path.insert(0, ANALISIS)
 
 MANAGUA_OK = {"managua", "ciudad sandino", "ticuantepe"}
 BBOX = {"s": 11.98, "n": 12.26, "o": -86.48, "e": -86.10}
+
+# --- clasificador de casas (conservador) ---
+# KW: misma lógica validada de clasificar_casas.py (pipeline local)
+KW_AUTO_CASA = {"SINGLE FAMILY DETACHED", "SINGLE FAMILY ATTACHED", "TOWNHOUSE", "DUPLEX"}
+KW_AUTO_NO = {"APARTMENT", "OFFICE", "RETAIL", "WAREHOUSE", "INDUSTRIAL", "HOTEL MOTEL",
+              "HOTEL-MOTEL", "OWN YOUR OWN", "STOCK COOPERATIVE", "DEEDED PARKING", "CABIN"}
+KW_POS_FUERTE = [r"\bcasas?\b", r"\bvivienda\b", r"\bresidencia\s", r"🏡", r"\bplanta alta\b",
+                 r"\bdos plantas\b", r"\bun nivel\b", r"\bdos niveles\b"]
+KW_POS_HAB = [r"\b\d+\s*(habitaciones|dormitorios|recamaras|recámaras)\b", r"\bhabitaciones\b",
+              r"\bdormitorios\b", r"\bclosets?\b", r"\bsala[- ]comedor\b"]
+KW_NEG = [r"\bterrenos?\b", r"\blotes?\b", r"\bvara[s]?\b", r"\bv²\b", r"\bfinca\b", r"\bbodega",
+          r"\blocal comercial\b", r"\bapartamentos?\b", r"\bproyecto\b", r"para construir",
+          r"\bedificios?\b"]
+
+NEG_TEXTO_RE = re.compile(
+    r"\bterrenos?\b|\blotes?\b|\bvara[s]?\b|\bfinca\b|\bbodega|\blocal comercial\b|"
+    r"\bedificios?\b|\bproyecto\b|para construir|\boficinas?\b", re.I)
+CASA_TEXTO_RE = re.compile(r"\bcasas?\b", re.I)
+
+
+def casa_por_texto(*textos):
+    """Casa si menciona 'casa' como sujeto del anuncio (las palabras no habitacionales
+    solo descalifican cuando aparecen ANTES de 'casa': 'terreno con casa' no es casa,
+    'casa con terreno amplio' sí lo es)."""
+    t = " ".join(x or "" for x in textos)
+    m = CASA_TEXTO_RE.search(t)
+    if not m:
+        return False
+    return not NEG_TEXTO_RE.search(t[:m.start()])
+
+
+def kw_es_casa(r):
+    t = (r.get("tipo_propiedad") or "").upper()
+    if t in KW_AUTO_CASA:
+        return True
+    if t in KW_AUTO_NO:
+        return False
+    texto = f"{r.get('descripcion') or ''} {r.get('direccion') or ''}".lower()
+    pos = sum(len(re.findall(p, texto)) for p in KW_POS_FUERTE) + 0.5 * sum(
+        len(re.findall(p, texto)) for p in KW_POS_HAB)
+    neg = sum(len(re.findall(p, texto)) for p in KW_NEG)
+    if re.search(r"\bconstrucc[ií]on\b", texto) and re.search(r"\bcasas?\b", texto):
+        pos += 1
+    return pos >= 2 and pos > neg
+
+
+def qc_es_casa(r):
+    return (r.get("tipo") or "").strip().lower() == "casa"
+
+
+def mb_es_casa(r):
+    t = (r.get("tipo") or "").strip().lower()
+    if t == "casa":
+        return True
+    return not t and casa_por_texto(r.get("titulo"))
+
+
+def sv_es_casa(r):
+    return casa_por_texto(r.get("titulo"), r.get("slug"))
 
 
 def _f(x):
@@ -50,7 +110,7 @@ def kw_rows():
                "m2": _f(r["area_m2"]), "lote": _f(r["lote_m2"]),
                "tipo": (r["tipo_propiedad"] or "").title(),
                "url": r["url"], "img": r["imagen"], "ciudad": (r["ciudad"] or "").strip(),
-               "dir": r["direccion"] or ""}
+               "dir": r["direccion"] or "", "casa": kw_es_casa(r)}
 
 
 def qc_rows():
@@ -66,7 +126,7 @@ def qc_rows():
                "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["m2_constr"]),
                "lote": _f(r["terreno"]), "tipo": (r["tipo"] or "").title(),
                "url": r["url"], "img": r["imagen"], "ciudad": (r.get("municipio") or "").strip(),
-               "dir": r["zona"] or ""}
+               "dir": r["zona"] or "", "casa": qc_es_casa(r)}
 
 
 def mb_rows():
@@ -82,7 +142,8 @@ def mb_rows():
                "zona": (r["zona"] or "").strip().title(), "hab": _i(r["hab"]),
                "banos": _i(r["banos"]), "m2": None, "lote": None,
                "tipo": (r["tipo"] or "").title(), "url": r["url"], "img": r["imagen"],
-               "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or ""}
+               "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or "",
+               "casa": mb_es_casa(r)}
 
 
 def sv_rows():
@@ -96,8 +157,9 @@ def sv_rows():
         yield {"id": "sv" + r["id"], "fuente": "sv", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
                "p": _f(r["precio"]), "zona": (r["loc"] or "").strip().title(),
                "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["area"]),
-               "lote": _f(r["lote"]), "tipo": "Casa", "url": r["url"], "img": r["imagen"],
-               "ciudad": (r.get("municipio") or "").strip(), "dir": r["loc"] or ""}
+               "lote": _f(r["lote"]),                "tipo": "Casa", "url": r["url"], "img": r["imagen"],
+               "ciudad": (r.get("municipio") or "").strip(), "dir": r["loc"] or "",
+               "casa": sv_es_casa(r)}
 
 
 def dedupe(items):
@@ -119,6 +181,9 @@ def main():
     items = list(kw_rows()) + list(qc_rows()) + list(mb_rows()) + list(sv_rows())
     unicos, dups = dedupe(items)
     print(f"total={len(items)} únicos={len(unicos)} repetidos={dups}")
+    for f in ("kw", "qc", "mb", "sv"):
+        filas_f = [x for x in unicos if x["fuente"] == f]
+        print(f"  {f}: {len(filas_f)} listados → {sum(1 for x in filas_f if x['casa'])} casas")
 
     os.makedirs(f"{REPO}/docs/data", exist_ok=True)
     os.makedirs(f"{REPO}/docs/slides", exist_ok=True)
@@ -137,18 +202,23 @@ def main():
                    "sovinic_venta.csv"))
     stats_json = {"fecha": datetime.date.fromtimestamp(fecha_m).isoformat(),
                   "global": stats(unicos),
+                  "casas": stats([x for x in unicos if x["casa"]]),
                   "kw": stats([x for x in unicos if x["fuente"] == "kw"]),
                   "qc": stats([x for x in unicos if x["fuente"] == "qc"]),
                   "mb": stats([x for x in unicos if x["fuente"] == "mb"]),
                   "sv": stats([x for x in unicos if x["fuente"] == "sv"]),
+                  "casas_fuente": {f: sum(1 for x in unicos if x["fuente"] == f and x["casa"])
+                                   for f in ("kw", "qc", "mb", "sv")},
                   "repetidos": dups}
     with open(f"{REPO}/docs/data/stats.json", "w", encoding="utf-8") as f:
         json.dump(stats_json, f, ensure_ascii=False, indent=1)
 
     # ranking de zonas (misma lógica del pipeline, con geocodificación cacheada)
+    # SOLO CASAS: el sitio analiza vivienda, no terrenos ni locales
     from generar_slides import agg_por_zona
+    casas = [x for x in unicos if x["casa"]]
     items_basicos = [{"lat": x["lat"], "lng": x["lng"], "p": x["p"], "zona": x["zona"],
-                      "dir": x["dir"], "fuente": x["fuente"]} for x in unicos]
+                      "dir": x["dir"], "fuente": x["fuente"]} for x in casas]
     caras, baratas = agg_por_zona(items_basicos)
     zonas = {"caras": [{"zona": z, "n": n, "promedio": round(p), "mediana": round(m)}
                        for z, n, p, m in caras],

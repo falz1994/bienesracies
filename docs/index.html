@@ -119,7 +119,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
 
 <header class="hero"><div class="wrap">
   <h1>Análisis de precios de <span>casas en venta</span><br>en el Área Metropolitana de Managua</h1>
-  <p>1,500+ propiedades de KW Nicaragua, QuieroCasa, Momotombo y Sovinic · consolidado, geocodificado y deduplicado<br>
+  <p><span id="heroNums">—</span> de KW Nicaragua, QuieroCasa, Momotombo y Sovinic · consolidado, geocodificado y deduplicado<br>
   <span style="font-size:14px">Datos extraídos el <b id="fechaExt" style="color:var(--amarillo)">—</b></span></p>
   <div class="bigstats" id="statsGlobal"></div>
   <div class="aviso"><b>⚠️ Consideración importante:</b> estos portales muestran el <b>segmento formal
@@ -135,6 +135,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <div class="ctrl-group">
       <div class="ctrl-tit">Fuentes</div>
       <div class="ctrl-items">
+        <label><input type="checkbox" id="c-casa" checked onchange="renderMapa()"> 🏠 Solo casas</label>
         <label><input type="checkbox" id="f-kw" checked onchange="renderMapa()"> <span class="chip kw">KW</span></label>
         <label><input type="checkbox" id="f-qc" checked onchange="renderMapa()"> <span class="chip qc">QuieroCasa</span></label>
         <label><input type="checkbox" id="f-mb" checked onchange="renderMapa()"> <span class="chip mb">Momotombo</span></label>
@@ -184,7 +185,8 @@ footer .descargas a:hover{border-color:var(--amarillo)}
 
 <section id="zonas"><div class="wrap">
   <h2>Zonas <span class="tag">más caras</span> y <span class="tag">más baratas</span></h2>
-  <p class="sub">Ranking por promedio de venta. Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.</p>
+  <p class="sub">Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas
+  quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.</p>
   <div class="zonas-col">
     <div class="tabla"><h3><span class="rojo">🔴 Las 10 zonas más caras</span></h3>
       <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
@@ -319,7 +321,8 @@ function activos() {
   if (document.getElementById('f-qc').checked) fuentes.push('qc');
   if (document.getElementById('f-mb').checked) fuentes.push('mb');
   if (document.getElementById('f-sv').checked) fuentes.push('sv');
-  return LISTADOS.filter(d => fuentes.includes(d.fuente));
+  const soloCasas = document.getElementById('c-casa').checked;
+  return LISTADOS.filter(d => fuentes.includes(d.fuente) && (!soloCasas || d.casa !== false));
 }
 
 function popupDe(d) {
@@ -538,16 +541,21 @@ async function cargar() {
   LISTADOS.push(...listados);
 
   const g = stats.global;
+  const cs = stats.casas || g;
+  const cf = stats.casas_fuente || {};
   if (stats.fecha) {
     document.getElementById('fechaExt').textContent =
       new Date(stats.fecha + 'T12:00:00').toLocaleDateString('es-NI', {day:'numeric', month:'long', year:'numeric'});
   }
+  document.getElementById('heroNums').textContent =
+    `${cs.n.toLocaleString()} casas en venta (de ${g.n.toLocaleString()} listados)`;
   document.getElementById('statsGlobal').innerHTML =
-    `<div class="c"><b>${g.n.toLocaleString()}</b><span>propiedades en venta</span></div>
-     <div class="c"><b>4</b><span>fuentes consolidadas</span></div>
-     <div class="c"><b>${fmtK(g.media)}</b><span>precio medio</span></div>
-     <div class="c"><b>${fmtK(g.p25)}–${fmtK(g.p75)}</b><span>mitad de las ofertas</span></div>
-     <div class="c"><b>${stats.repetidos}</b><span>repetidos eliminados</span></div>`;
+     `<div class="c"><b>${cs.n.toLocaleString()}</b><span>casas en venta (filtro principal)</span></div>
+      <div class="c"><b>${g.n.toLocaleString()}</b><span>listados totales con terrenos y locales</span></div>
+      <div class="c"><b>4</b><span>fuentes consolidadas</span></div>
+      <div class="c"><b>${fmtK(cs.media)}</b><span>precio medio de casa</span></div>
+      <div class="c"><b>${fmtK(cs.p25)}–${fmtK(cs.p75)}</b><span>mitad de las casas</span></div>
+      <div class="c"><b>${stats.repetidos}</b><span>repetidos eliminados</span></div>`;
 
   const filas = (arr) => arr.map(z =>
     `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
