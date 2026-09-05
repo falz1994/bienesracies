@@ -86,6 +86,10 @@ h2 .tag{color:var(--amarillo)}
 .lb-x{position:absolute;top:14px;right:20px;background:none;border:none;color:var(--gris);
   font-size:34px;line-height:1;cursor:pointer}
 .lb-x:hover{color:var(--txt)}
+.mini-btns{display:flex;gap:8px;margin-bottom:12px}
+.mini-btns button{background:var(--panel);border:1px solid #1d2740;color:var(--gris);
+  border-radius:20px;padding:6px 18px;font-size:13px;cursor:pointer;font-weight:600}
+.mini-btns button.activo{border-color:var(--amarillo);color:var(--amarillo)}
 .celda-vacia{fill:url(#patRayas)}
 .met{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .met .c{background:var(--panel);border:1px solid #1d2740;border-top:3px solid var(--azul);border-radius:14px;padding:18px}
@@ -158,13 +162,19 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <div class="ctrl-group">
       <div class="ctrl-tit">Ajustes</div>
       <div class="ctrl-items">
+        <label>Agrupar:
+          <select id="agg-unit" onchange="renderMapa()">
+            <option value="celdas">Celdas (barrios)</option>
+            <option value="distritos">Distritos</option>
+          </select>
+        </label>
         <label>Peso:
           <select id="heat-mode" onchange="renderMapa()">
             <option value="precio">Precio</option>
             <option value="densidad">Densidad</option>
           </select>
         </label>
-        <label>Celda: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
+        <label id="lbl-celda">Celda: <input type="range" id="z-km" min="0.5" max="3" step="0.25" value="1" onchange="renderMapa()"> <span id="z-km-lbl">1.0 km</span></label>
       </div>
     </div>
   </div>
@@ -188,8 +198,12 @@ footer .descargas a:hover{border-color:var(--amarillo)}
 
 <section id="zonas"><div class="wrap">
   <h2>Zonas <span class="tag">más caras</span> y <span class="tag">más baratas</span></h2>
-  <p class="sub">Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas
+  <p class="sub" id="sub-zonas">Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas
   quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.</p>
+  <div class="mini-btns">
+    <button id="t-btn-barrio" class="activo" onclick="setTabla('barrio')">Por barrio</button>
+    <button id="t-btn-distrito" onclick="setTabla('distritos')">Por distrito</button>
+  </div>
   <div class="zonas-col">
     <div class="tabla"><h3><span class="rojo">🔴 Las 10 zonas más caras</span></h3>
       <table><thead><tr><th>Zona</th><th>Listados</th><th>Promedio</th></tr></thead>
@@ -317,6 +331,7 @@ defsRayas.innerHTML = `<pattern id="patRayas" patternUnits="userSpaceOnUse" widt
 svgOverlay.appendChild(defsRayas);
 
 let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null, capaGob = null;
+let DIST_POLYS = [];
 const PROG_GOB = [];
 const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC', sv:'#FF8C42', dn:'#D65DB1'};
 
@@ -396,6 +411,34 @@ function renderMapa() {
   }
 
   if (document.getElementById('c-zonas').checked) {
+    const aggUnit = document.getElementById('agg-unit').value;
+    document.getElementById('lbl-celda').style.display = aggUnit === 'distritos' ? 'none' : '';
+    if (aggUnit === 'distritos') {
+      // polígonos de los distritos coloreados por promedio
+      const grupos = new Map();
+      for (const d of ds) {
+        const k = d.distrito || 'Managua (otros)';
+        if (!grupos.has(k)) grupos.set(k, []);
+        grupos.get(k).push(d.p);
+      }
+      const stats = [...grupos.entries()].filter(([, ps]) => ps.length >= 3)
+        .map(([k, ps]) => ({distrito: k, n: ps.length,
+          promedio: ps.reduce((a, b) => a + b, 0) / ps.length}));
+      const promedios = stats.map(s => s.promedio);
+      capaZonas = L.layerGroup();
+      for (const f of DIST_POLYS) {
+        const st = stats.find(s => s.distrito === f.properties.nombre);
+        if (!st) continue;
+        const col = colorPct(pctDe(st.promedio, promedios));
+        const rings = f.geometry.type === 'Polygon' ? [f.geometry.coordinates]
+          : f.geometry.coordinates;
+        const latlngs = rings.map(poly => poly.map(ring => ring.map(([x, y]) => [y, x])));
+        L.polygon(latlngs, {color: '#e6ecf7', weight: 2, fillColor: col, fillOpacity: .55})
+         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados`,
+                      {sticky: true}).addTo(capaZonas);
+      }
+      capaZonas.addTo(mapa);
+    } else {
     const km = parseFloat(document.getElementById('z-km').value);
     const dLat = km / 111, dLng = km / (111 * Math.cos(12.13 * Math.PI / 180));
     const celdas = new Map();
@@ -413,6 +456,7 @@ function renderMapa() {
       }).bindTooltip(`<b>${fmt(med)}</b><br>${c.vals.length} propiedades`, {sticky:true}).addTo(capaZonas);
     }
     capaZonas.addTo(mapa);
+    }
   }
 
   const cobOn = document.getElementById('c-cob').checked;
@@ -535,14 +579,48 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') navegaLb(1);
 });
 
+// ---------- tablas barrios / distritos ----------
+let ZONAS_BARRIO = null;
+const tablaDistritos = () => {
+  const cs = LISTADOS.filter(d => d.casa !== false && d.distrito);
+  const g = new Map();
+  for (const d of cs) {
+    if (!g.has(d.distrito)) g.set(d.distrito, []);
+    g.get(d.distrito).push(d.p);
+  }
+  const filas = [...g.entries()]
+    .map(([zona, ps]) => ({zona, n: ps.length,
+      promedio: ps.reduce((a, b) => a + b, 0) / ps.length}))
+    .filter(f => f.n >= 3);
+  const caras = filas.filter(f => f.n >= 4).sort((a, b) => b.promedio - a.promedio).slice(0, 10);
+  const excl = new Set(caras.map(f => f.zona));
+  const baratas = filas.filter(f => !excl.has(f.zona))
+    .sort((a, b) => a.promedio - b.promedio).slice(0, 10);
+  return {caras, baratas};
+};
+function setTabla(u) {
+  const filas = (arr) => arr.map(z =>
+    `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
+  const d = u === 'distritos' ? tablaDistritos() : ZONAS_BARRIO;
+  document.getElementById('tb-caras').innerHTML = filas(d.caras);
+  document.getElementById('tb-baratas').innerHTML = filas(d.baratas);
+  document.getElementById('t-btn-barrio').classList.toggle('activo', u === 'barrio');
+  document.getElementById('t-btn-distrito').classList.toggle('activo', u === 'distritos');
+  document.getElementById('sub-zonas').innerHTML = u === 'distritos'
+    ? 'Ranking por promedio de venta <b>por distrito de Managua</b> (solo casas; los listados fuera de los distritos I–VII se agrupan por municipio).'
+    : 'Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.';
+}
+
 // ---------- carga de datos ----------
 async function cargar() {
-  const [stats, zonas, listados, gob] = await Promise.all([
+  const [stats, zonas, listados, gob, distGeo] = await Promise.all([
     fetch('data/stats.json').then(r => r.json()),
     fetch('data/zonas.json').then(r => r.json()),
     fetch('data/listados.json').then(r => r.json()),
-    fetch('data/programas_gobierno.json').then(r => r.json())
+    fetch('data/programas_gobierno.json').then(r => r.json()),
+    fetch('data/distritos_managua.geojson').then(r => r.json()).catch(() => ({features: []}))
   ]);
+  DIST_POLYS = distGeo.features || [];
   PROG_GOB.push(...(gob.programas || []));
   LISTADOS.push(...listados);
 
@@ -565,6 +643,7 @@ async function cargar() {
 
   const filas = (arr) => arr.map(z =>
     `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');
+  ZONAS_BARRIO = {caras: zonas.caras, baratas: zonas.baratas};
   document.getElementById('tb-caras').innerHTML = filas(zonas.caras);
   document.getElementById('tb-baratas').innerHTML = filas(zonas.baratas);
 

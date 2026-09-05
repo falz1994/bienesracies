@@ -20,6 +20,49 @@ from clasificador_casas import kw_es_casa, qc_es_casa, mb_es_casa, sv_es_casa, d
 MANAGUA_OK = {"managua", "ciudad sandino", "ticuantepe"}
 BBOX = {"s": 11.98, "n": 12.26, "o": -86.48, "e": -86.10}
 
+# polígonos de los distritos de Managua (extraídos de OSM por extraer_distritos.py)
+try:
+    _DIST_GEO = json.load(open(f"{ANALISIS}/distritos_managua.geojson", encoding="utf-8"))
+except FileNotFoundError:
+    _DIST_GEO = {"features": []}
+
+
+def _pipo(lat, lng, poly):
+    """point-in-polygon (ray casting) con agujeros; poly = [rings] de [lng,lat]."""
+    def dentro(x, y, ring):
+        c = False
+        n = len(ring)
+        for i in range(n):
+            x1, y1 = ring[i]
+            x2, y2 = ring[(i + 1) % n]
+            if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+                c = not c
+        return c
+    if not dentro(lng, lat, poly[0]):
+        return False
+    return not any(dentro(lng, lat, h) for h in poly[1:])
+
+
+_CACHE_DIST = {}
+
+
+def distrito_de(lat, lng, ciudad):
+    if lat is None or lng is None:
+        return ""
+    k = (round(lat, 5), round(lng, 5))
+    if k not in _CACHE_DIST:
+        d = ""
+        for f in _DIST_GEO["features"]:
+            geom = f["geometry"]
+            polys = [geom["coordinates"]] if geom["type"] == "Polygon" else geom["coordinates"]
+            if any(_pipo(lat, lng, p) for p in polys):
+                d = f["properties"]["nombre"]
+                break
+        if not d:
+            d = (ciudad or "").strip().title() or "Managua (otros)"
+        _CACHE_DIST[k] = d
+    return _CACHE_DIST[k]
+
 
 def _f(x):
     try:
@@ -52,7 +95,8 @@ def kw_rows():
                "m2": _f(r["area_m2"]), "lote": _f(r["lote_m2"]),
                "tipo": (r["tipo_propiedad"] or "").title(),
                "url": r["url"], "img": r["imagen"], "ciudad": (r["ciudad"] or "").strip(),
-               "dir": r["direccion"] or "", "casa": kw_es_casa(r)}
+               "dir": r["direccion"] or "", "casa": kw_es_casa(r),
+               "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("ciudad"))}
 
 
 def qc_rows():
@@ -68,7 +112,8 @@ def qc_rows():
                "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["m2_constr"]),
                "lote": _f(r["terreno"]), "tipo": (r["tipo"] or "").title(),
                "url": r["url"], "img": r["imagen"], "ciudad": (r.get("municipio") or "").strip(),
-               "dir": r["zona"] or "", "casa": qc_es_casa(r)}
+               "dir": r["zona"] or "", "casa": qc_es_casa(r),
+               "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("municipio"))}
 
 
 def mb_rows():
@@ -85,7 +130,8 @@ def mb_rows():
                "banos": _i(r["banos"]), "m2": None, "lote": None,
                "tipo": (r["tipo"] or "").title(), "url": r["url"], "img": r["imagen"],
                "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or "",
-               "casa": mb_es_casa(r)}
+               "casa": mb_es_casa(r),
+               "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("municipio"))}
 
 
 def sv_rows():
@@ -101,7 +147,8 @@ def sv_rows():
                "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["area"]),
                "lote": _f(r["lote"]),                "tipo": "Casa", "url": r["url"], "img": r["imagen"],
                "ciudad": (r.get("municipio") or "").strip(), "dir": r["loc"] or "",
-               "casa": sv_es_casa(r)}
+               "casa": sv_es_casa(r),
+               "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("municipio"))}
 
 
 def dn_rows():
@@ -117,7 +164,8 @@ def dn_rows():
                "hab": _i(r["hab"]), "banos": _i(r["banos"]), "m2": _f(r["m2"]),
                "lote": _f(r["lote_vrs"]), "tipo": "Casa", "url": r["url"], "img": r["imagen"],
                "ciudad": (r.get("municipio") or "").strip(), "dir": r["zona"] or "",
-               "casa": dn_es_casa(r)}
+               "casa": dn_es_casa(r),
+               "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("municipio"))}
 
 
 def dedupe(items):
@@ -191,6 +239,7 @@ def main():
     for nombre in ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv",
                    "sovinic_venta.csv", "discovernica_venta.csv"):
         shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/docs/data/{nombre}")
+    shutil.copy(f"{ANALISIS}/distritos_managua.geojson", f"{REPO}/docs/data/distritos_managua.geojson")
     for png in sorted(os.listdir(f"{ANALISIS}/slides")):
         if png.endswith(".png"):
             shutil.copy(f"{ANALISIS}/slides/{png}", f"{REPO}/docs/slides/{png}")
