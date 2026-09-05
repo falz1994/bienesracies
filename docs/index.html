@@ -85,6 +85,7 @@ h2 .tag{color:var(--amarillo)}
 .lb-x{position:absolute;top:14px;right:20px;background:none;border:none;color:var(--gris);
   font-size:34px;line-height:1;cursor:pointer}
 .lb-x:hover{color:var(--txt)}
+.celda-vacia{fill:url(#patRayas)}
 .met{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .met .c{background:var(--panel);border:1px solid #1d2740;border-top:3px solid var(--azul);border-radius:14px;padding:18px}
 .met .c.amarillo{border-top-color:var(--amarillo)}
@@ -172,7 +173,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <span class="chip mb">■ Momotombo</span> ·
     <span class="chip sv">■ Sovinic</span> —
     celda coloreada por la agencia con más listados allí ·
-    <span style="color:#7a8699">■ gris = zona poco cubierta (sin ofertas registradas)</span> ·
+    <span style="color:#c7d0e0">▨ rayadas = <b>zona poco cubierta</b> — sin ofertas del mercado formal <b id="vacN"></b></span> ·
     <span style="color:#2DD4BF">● turquesa = urbanización del Gobierno</span>
   </div>
   <div class="aviso" style="border-color:rgba(91,155,213,.5);background:rgba(91,155,213,.08)">
@@ -295,6 +296,18 @@ const mapa = L.map('mapa', {zoomControl: true}).setView([12.13, -86.27], 12);
 const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
 L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, attribution:'© Esri'}).addTo(mapa);
 L.tileLayer(ESRI + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, maxNativeZoom:16, opacity:.85}).addTo(mapa);
+
+// patrón de rayado diagonal para las celdas sin cobertura (defs del SVG del mapa)
+if (!document.querySelector('#mapa .leaflet-overlay-pane svg')) {
+  L.circle([12.13, -86.27], {radius: 0.01, opacity: 0, fillOpacity: 0}).addTo(mapa);
+}
+const svgOverlay = document.querySelector('#mapa .leaflet-overlay-pane svg');
+const defsRayas = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+defsRayas.innerHTML = `<pattern id="patRayas" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
+  <rect width="9" height="9" fill="rgba(13,21,38,.55)"/>
+  <line x1="0" y1="0" x2="0" y2="9" stroke="#c7d0e0" stroke-opacity=".8" stroke-width="3.5"/>
+</pattern>`;
+svgOverlay.appendChild(defsRayas);
 
 let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null, capaGob = null;
 const PROG_GOB = [];
@@ -445,16 +458,22 @@ function renderMapa() {
     const minLng = Math.floor(Math.min(...ds.map(d => d.lng)) / dLng) * dLng;
     const maxLng = (Math.floor(Math.max(...ds.map(d => d.lng)) / dLng) + 1) * dLng;
     capaVac = L.layerGroup();
+    let nVac = 0;
     for (let la = minLat; la < maxLat; la += dLat) {
       for (let ln = minLng; ln < maxLng; ln += dLng) {
         const key = Math.floor(la / dLat) + '_' + Math.floor(ln / dLng);
         if (celdas.has(key)) continue;
+        nVac++;
         L.rectangle([[la, ln], [la+dLat, ln+dLng]], {
-          color: '#5a6473', weight: 1, dashArray: '4 4', fillColor: '#5a6473', fillOpacity: .22
-        }).bindTooltip('Zona poco cubierta: sin ofertas registradas en estas fuentes', {sticky:true}).addTo(capaVac);
+          color: '#e6ecf7', weight: 2, dashArray: '7 5', className: 'celda-vacia',
+          fillColor: '#c7d0e0', fillOpacity: .65
+        }).bindTooltip('<b>Zona poco cubierta</b><br>Sin ofertas del mercado formal en las fuentes activas — la brecha de cobertura del análisis', {sticky:true}).addTo(capaVac);
       }
     }
     capaVac.addTo(mapa);
+    document.getElementById('vacN').textContent = `(${nVac} celdas)`;
+  } else {
+    document.getElementById('vacN').textContent = '';
   }
 }
 
