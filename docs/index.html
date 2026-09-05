@@ -425,19 +425,18 @@ function renderMapa() {
         .map(([k, ps]) => ({distrito: k, n: ps.length,
           promedio: ps.reduce((a, b) => a + b, 0) / ps.length}));
       const promedios = stats.map(s => s.promedio);
-      const totalAct = ds.length;
       capaZonas = L.layerGroup();
       for (const f of DIST_POLYS) {
         const st = stats.find(s => s.distrito === f.properties.nombre);
         if (!st) continue;
         const col = colorPct(pctDe(st.promedio, promedios));
+        const pctVol = (100 * st.n / ds.length).toFixed(1);
         const rings = f.geometry.type === 'Polygon' ? [f.geometry.coordinates]
           : f.geometry.coordinates;
         const latlngs = rings.map(poly => poly.map(ring => ring.map(([x, y]) => [y, x])));
-        const pctVol = totalAct ? (st.n / totalAct * 100).toFixed(1) : '0';
         L.polygon(latlngs, {color: '#e6ecf7', weight: 2, fillColor: col, fillOpacity: .55})
-         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados ` +
-                      `(${pctVol}% del volumen)`, {sticky: true}).addTo(capaZonas);
+         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados `
+           + `(${pctVol}% del volumen)`, {sticky: true}).addTo(capaZonas);
       }
       capaZonas.addTo(mapa);
     } else {
