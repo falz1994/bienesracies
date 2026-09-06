@@ -90,6 +90,12 @@ h2 .tag{color:var(--amarillo)}
 .mini-btns button{background:var(--panel);border:1px solid #1d2740;color:var(--gris);
   border-radius:20px;padding:6px 18px;font-size:13px;cursor:pointer;font-weight:600}
 .mini-btns button.activo{border-color:var(--amarillo);color:var(--amarillo)}
+.lbl-distrito{background:rgba(13,21,38,.88);color:#e8eefc;border:1px solid #2a3a5c;
+  border-radius:9px;padding:6px 12px;font-size:13px;font-weight:600;text-align:center;
+  white-space:nowrap;line-height:1.35;box-shadow:none;pointer-events:none}
+.lbl-distrito::before{display:none}
+.lbl-distrito b{color:var(--amarillo)}
+.lbl-distrito .pct{color:#fff;font-size:15px}
 .celda-vacia{fill:url(#patRayas)}
 .met{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .met .c{background:var(--panel);border:1px solid #1d2740;border-top:3px solid var(--azul);border-radius:14px;padding:18px}
@@ -435,8 +441,9 @@ function renderMapa() {
           : f.geometry.coordinates;
         const latlngs = rings.map(poly => poly.map(ring => ring.map(([x, y]) => [y, x])));
         L.polygon(latlngs, {color: '#e6ecf7', weight: 2, fillColor: col, fillOpacity: .55})
-         .bindTooltip(`<b>${st.distrito}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados `
-           + `(${pctVol}% del volumen)`, {sticky: true}).addTo(capaZonas);
+         .bindTooltip(`<b>${st.distrito}</b><br><span class="pct">${pctVol}%</span> · ` +
+                      `${fmt(st.promedio)}`, {permanent: true, direction: 'center',
+                      className: 'lbl-distrito'}).addTo(capaZonas);
       }
       capaZonas.addTo(mapa);
     } else {
