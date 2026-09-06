@@ -171,6 +171,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
         <label>Agrupar:
           <select id="agg-unit" onchange="renderMapa()">
             <option value="celdas">Celdas (barrios)</option>
+            <option value="barrios">Barrios (OSM)</option>
             <option value="distritos">Distritos</option>
           </select>
         </label>
@@ -338,6 +339,7 @@ svgOverlay.appendChild(defsRayas);
 
 let capaHeat = null, capaClus = null, capaZonas = null, capaCob = null, capaVac = null, capaGob = null;
 let DIST_POLYS = [];
+let BAR_POLYS = [];
 const PROG_GOB = [];
 const FUENTE_COLOR = {kw:'#F2C14E', qc:'#5B9BD5', mb:'#C9A0DC', sv:'#FF8C42', dn:'#D65DB1'};
 
@@ -418,8 +420,34 @@ function renderMapa() {
 
   if (document.getElementById('c-zonas').checked) {
     const aggUnit = document.getElementById('agg-unit').value;
-    document.getElementById('lbl-celda').style.display = aggUnit === 'distritos' ? 'none' : '';
-    if (aggUnit === 'distritos') {
+    document.getElementById('lbl-celda').style.display = aggUnit === 'celdas' ? '' : 'none';
+    if (aggUnit === 'barrios') {
+      // polígonos de barrios/residenciales de OSM coloreados por promedio
+      const grupos = new Map();
+      for (const d of ds) {
+        if (!grupos.has(d.zona)) grupos.set(d.zona, []);
+        grupos.get(d.zona).push(d.p);
+      }
+      const stats = [...grupos.entries()].filter(([, ps]) => ps.length >= 2)
+        .map(([k, ps]) => ({zona: k, n: ps.length,
+          promedio: ps.reduce((a, b) => a + b, 0) / ps.length}));
+      const promedios = stats.map(s => s.promedio);
+      capaZonas = L.layerGroup();
+      for (const f of BAR_POLYS) {
+        const st = stats.find(s => s.zona === f.properties.nombre);
+        if (!st) continue;
+        const col = colorPct(pctDe(st.promedio, promedios));
+        const g = f.geometry;
+        const latlngs = g.type === 'Polygon'
+          ? [g.coordinates.map(r => r.map(([x, y]) => [y, x]))]
+          : g.coordinates.map(p => p.map(r => r.map(([x, y]) => [y, x])));
+        L.polygon(latlngs, {color: '#f2f5fb', weight: 2, fillColor: col, fillOpacity: .68})
+         .bindTooltip(`<b>${st.zona}</b><br>promedio ${fmt(st.promedio)} · ${st.n} listados `
+           + `(${(100 * st.n / ds.length).toFixed(1)}% del volumen)`, {sticky: true})
+         .addTo(capaZonas);
+      }
+      capaZonas.addTo(mapa);
+    } else if (aggUnit === 'distritos') {
       // polígonos de los distritos coloreados por promedio
       const grupos = new Map();
       for (const d of ds) {
@@ -622,19 +650,21 @@ function setTabla(u) {
   document.getElementById('t-btn-distrito').classList.toggle('activo', u === 'distritos');
   document.getElementById('sub-zonas').innerHTML = u === 'distritos'
     ? 'Ranking por promedio de venta <b>por distrito de Managua</b> (solo casas; los listados fuera de los distritos I–VII se agrupan por municipio). "% Vol" = participación de listados del distrito sobre el total de casas.'
-    : 'Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Nombres resueltos a barrios reales con OpenStreetMap.';
+    : 'Ranking por promedio de venta <b>solo con casas</b> (terrenos, locales y oficinas quedan fuera del ranking). Zonas con ≥4 listados (≥3 en baratas). Barrios y residenciales asignados con polígonos de OpenStreetMap.';
 }
 
 // ---------- carga de datos ----------
 async function cargar() {
-  const [stats, zonas, listados, gob, distGeo] = await Promise.all([
+  const [stats, zonas, listados, gob, distGeo, barGeo] = await Promise.all([
     fetch('data/stats.json').then(r => r.json()),
     fetch('data/zonas.json').then(r => r.json()),
     fetch('data/listados.json').then(r => r.json()),
     fetch('data/programas_gobierno.json').then(r => r.json()),
-    fetch('data/distritos_managua.geojson').then(r => r.json()).catch(() => ({features: []}))
+    fetch('data/distritos_managua.geojson').then(r => r.json()).catch(() => ({features: []})),
+    fetch('data/barrios_managua.geojson').then(r => r.json()).catch(() => ({features: []}))
   ]);
   DIST_POLYS = distGeo.features || [];
+  BAR_POLYS = (barGeo.features || []).filter(f => f.geometry.type !== 'Point');
   PROG_GOB.push(...(gob.programas || []));
   LISTADOS.push(...listados);
 

@@ -1,52 +1,40 @@
 {
  "caras": [
   {
-   "zona": "Villa Fontana Sur",
+   "zona": "Las Palmas",
+   "n": 39,
+   "promedio": 691566,
+   "mediana": 320000
+  },
+  {
+   "zona": "Los Altos de Santo Domingo",
    "n": 9,
-   "promedio": 670789,
-   "mediana": 556000
+   "promedio": 530744,
+   "mediana": 450000
   },
   {
-   "zona": "& Renta Santo Domingo",
-   "n": 5,
-   "promedio": 562000,
-   "mediana": 560000
-  },
-  {
-   "zona": "Villa Fontana",
-   "n": 31,
-   "promedio": 491213,
-   "mediana": 375000
-  },
-  {
-   "zona": "Édgard Lang 2",
-   "n": 90,
-   "promedio": 482339,
-   "mediana": 294000
-  },
-  {
-   "zona": "Santo Domingo",
-   "n": 87,
-   "promedio": 459896,
-   "mediana": 395000
-  },
-  {
-   "zona": "& Renta Carretera Sur",
-   "n": 4,
-   "promedio": 456000,
+   "zona": "Villa Fontana Sur",
+   "n": 42,
+   "promedio": 518945,
    "mediana": 362500
   },
   {
-   "zona": "Altos de Santo Domingo",
-   "n": 7,
-   "promedio": 385829,
-   "mediana": 399000
+   "zona": "Estancia de Santo Domingo",
+   "n": 4,
+   "promedio": 469750,
+   "mediana": 417500
+  },
+  {
+   "zona": "Santo Domingo",
+   "n": 85,
+   "promedio": 447484,
+   "mediana": 395000
   },
   {
    "zona": "Las Colinas",
-   "n": 41,
-   "promedio": 371187,
-   "mediana": 310000
+   "n": 42,
+   "promedio": 374730,
+   "mediana": 330000
   },
   {
    "zona": "Los Robles",
@@ -55,72 +43,84 @@
    "mediana": 372500
   },
   {
-   "zona": "Las Cumbres",
-   "n": 10,
-   "promedio": 334500,
-   "mediana": 285000
+   "zona": "Centro Histórico Cultural",
+   "n": 87,
+   "promedio": 357623,
+   "mediana": 280000
+  },
+  {
+   "zona": "Reparto San Juan",
+   "n": 15,
+   "promedio": 323647,
+   "mediana": 295000
+  },
+  {
+   "zona": "Édgard Lang",
+   "n": 37,
+   "promedio": 322696,
+   "mediana": 260000
   }
  ],
  "baratas": [
   {
-   "zona": "Zona Residencial",
-   "n": 4,
-   "promedio": 90875,
-   "mediana": 72500
-  },
-  {
-   "zona": "Las Brisas",
-   "n": 4,
-   "promedio": 91225,
-   "mediana": 112000
-  },
-  {
-   "zona": "Sector Lago",
-   "n": 9,
-   "promedio": 108439,
-   "mediana": 79700
-  },
-  {
-   "zona": "Ciudad Sandino",
-   "n": 4,
-   "promedio": 117500,
-   "mediana": 80000
-  },
-  {
-   "zona": "Barrio la Primavera",
-   "n": 10,
-   "promedio": 120300,
-   "mediana": 83500
-  },
-  {
-   "zona": "Altamira",
-   "n": 5,
-   "promedio": 124000,
-   "mediana": 125000
-  },
-  {
-   "zona": "Las Rosaledas",
-   "n": 4,
-   "promedio": 125000,
-   "mediana": 125000
-  },
-  {
-   "zona": "Bello Horizonte",
+   "zona": "Ciudad El Doral",
    "n": 3,
-   "promedio": 125933,
-   "mediana": 110000
+   "promedio": 44833,
+   "mediana": 46500
   },
   {
-   "zona": "Las Jaguitas",
+   "zona": "Vistas del Momotombo",
+   "n": 4,
+   "promedio": 51250,
+   "mediana": 43500
+  },
+  {
+   "zona": "Valle Santa Rosa",
    "n": 5,
-   "promedio": 127720,
-   "mediana": 129900
+   "promedio": 52780,
+   "mediana": 51900
   },
   {
-   "zona": "Sierras Doradas",
+   "zona": "Villa Reconciliación",
+   "n": 4,
+   "promedio": 58500,
+   "mediana": 62500
+  },
+  {
+   "zona": "San Judas",
+   "n": 4,
+   "promedio": 60875,
+   "mediana": 65000
+  },
+  {
+   "zona": "Praderas de Sandino",
+   "n": 5,
+   "promedio": 64000,
+   "mediana": 65000
+  },
+  {
+   "zona": "Urbanización Ríos de Agua Viva",
+   "n": 4,
+   "promedio": 66250,
+   "mediana": 65000
+  },
+  {
+   "zona": "Villa Libertad",
    "n": 3,
-   "promedio": 129333,
-   "mediana": 140000
+   "promedio": 73333,
+   "mediana": 55000
+  },
+  {
+   "zona": "Barrio Cuba",
+   "n": 3,
+   "promedio": 75667,
+   "mediana": 72000
+  },
+  {
+   "zona": "Urbanizacion Villas de Xiloa",
+   "n": 14,
+   "promedio": 78779,
+   "mediana": 61500
   }
  ]
 }

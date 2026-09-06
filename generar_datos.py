@@ -6,6 +6,7 @@ Uso: python3 generar_datos.py   (requiere los CSVs en /home/devni/analisis biene
 import csv
 import datetime
 import json
+import math
 import os
 import shutil
 import statistics
@@ -69,6 +70,57 @@ def _f(x):
         return float(str(x).replace(",", ""))
     except (ValueError, TypeError):
         return None
+
+
+# barrios y residenciales nombrados de OSM (extraídos por extraer_barrios.py)
+try:
+    _BAR_GEO = json.load(open(f"{ANALISIS}/barrios_managua.geojson", encoding="utf-8"))
+except FileNotFoundError:
+    _BAR_GEO = {"features": []}
+
+_BAR_AREAS, _BAR_NODOS = [], []
+for _f_ in _BAR_GEO["features"]:
+    _g = _f_["geometry"]
+    if _g["type"] == "Point":
+        _BAR_NODOS.append((_f_["properties"]["nombre"], _g["coordinates"][1],
+                           _g["coordinates"][0]))
+        continue
+    _polys = [_g["coordinates"]] if _g["type"] == "Polygon" else _g["coordinates"]
+    _pts = [pt for p in _polys for r in p for pt in r]
+    _o = min(p[0] for p in _pts); _s = min(p[1] for p in _pts)
+    _e = max(p[0] for p in _pts); _n = max(p[1] for p in _pts)
+    _BAR_AREAS.append((_f_["properties"]["nombre"], _polys, (_o, _s, _e, _n),
+                       (_e - _o) * (_n - _s)))
+_BAR_AREAS.sort(key=lambda x: x[3])
+
+_CACHE_BAR = {}
+
+
+def barrio_de(lat, lng):
+    """Barrio/residencial OSM: polígono más pequeño que contiene el punto,
+    o nodo con nombre más cercano (<700 m). None si no hay match."""
+    if lat is None or lng is None:
+        return None
+    k = (round(lat, 5), round(lng, 5))
+    if k in _CACHE_BAR:
+        return _CACHE_BAR[k]
+    nom = None
+    for nombre, polys, (o, s, e, n), _a in _BAR_AREAS:
+        if lng < o or lng > e or lat < s or lat > n:
+            continue
+        if any(_pipo(lat, lng, p) for p in polys):
+            nom = nombre
+            break
+    if nom is None:
+        mejor = 0.7
+        for nombre, nlat, nlng in _BAR_NODOS:
+            dx = (nlng - lng) * 111 * math.cos(math.radians(12.13))
+            dy = (nlat - lat) * 111
+            d = math.hypot(dx, dy)
+            if d < mejor:
+                mejor, nom = d, nombre
+    _CACHE_BAR[k] = nom
+    return nom
 
 
 def _i(x):
@@ -188,6 +240,14 @@ def main():
         list(dn_rows())
     unicos, dups = dedupe(items)
     print(f"total={len(items)} únicos={len(unicos)} repetidos={dups}")
+    n_bar = 0
+    for x in unicos:
+        b = barrio_de(x["lat"], x["lng"])
+        if b and b != x["zona"]:
+            x["zona_orig"] = x["zona"]
+            x["zona"] = b
+            n_bar += 1
+    print(f"barrio OSM asignado/corregido: {n_bar}/{len(unicos)}")
     for f in ("kw", "qc", "mb", "sv", "dn"):
         filas_f = [x for x in unicos if x["fuente"] == f]
         print(f"  {f}: {len(filas_f)} listados → {sum(1 for x in filas_f if x['casa'])} casas")
@@ -240,6 +300,8 @@ def main():
                    "sovinic_venta.csv", "discovernica_venta.csv"):
         shutil.copy(f"{ANALISIS}/{nombre}", f"{REPO}/docs/data/{nombre}")
     shutil.copy(f"{ANALISIS}/distritos_managua.geojson", f"{REPO}/docs/data/distritos_managua.geojson")
+    if os.path.exists(f"{ANALISIS}/barrios_managua.geojson"):
+        shutil.copy(f"{ANALISIS}/barrios_managua.geojson", f"{REPO}/docs/data/barrios_managua.geojson")
     for png in sorted(os.listdir(f"{ANALISIS}/slides")):
         if png.endswith(".png"):
             shutil.copy(f"{ANALISIS}/slides/{png}", f"{REPO}/docs/slides/{png}")
