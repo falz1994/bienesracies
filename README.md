@@ -55,8 +55,9 @@ Qué hace el refresco completo:
 3. **Extracción** de las 5 fuentes con guarda: si una fuente devuelve menos del 70 % de las filas
    anteriores, se restaura su backup y se avisa (cambio de HTML/API o bloqueo).
 4. **Geocodificación** con Nominatim (1 req/s, `countrycodes=ni`) y caches por fuente.
-5. **Consolidación** (`pipeline/generar_datos.py`): dedupe entre portales ±110 m + precio en el
-   mismo millar, filtro Managua + Ciudad Sandino + Ticuantepe, asignación de distrito y barrio OSM.
+5. **Consolidación** (`pipeline/generar_datos.py`): dedupe entre portales con evidencia
+   (≤110 m + precio ≤3 % + m²/lote ≤5 % o programa igual), filtro Managua + Ciudad Sandino +
+   Ticuantepe, asignación de distrito y barrio OSM.
 6. **Histórico**: snapshot del día, diff contra la extracción anterior y serie `historico.json`.
 7. **Slides** (opcional si hay Playwright/Chromium) y **validación** de invariantes.
 
@@ -87,6 +88,16 @@ mediana de precio de cada barrio entre ambas fechas.
 
 El sitio muestra la serie y el último cambio en la sección **Histórico**.
 
+### Propiedades repetidas entre portales
+
+```bash
+python3 pipeline/cruzar_fuentes.py --md history/cruces-<fecha>.md --json history/cruces-<fecha>.json
+```
+
+Empareja la misma propiedad publicada en varios portales combinando precio, m², lote, programa
+y texto del anuncio, y reporta la diferencia de precio entre portales (quién la publica más barato
+y más caro). Usa `--amplio` para subir el recall a costa de más falsos positivos.
+
 ## Deploy
 
 - **Vercel Root Directory = `docs`** (configurado en el dashboard; el repo no lo puede fijar).
@@ -101,8 +112,9 @@ El sitio muestra la serie y el último cambio en la sección **Histórico**.
 ## Notas metodológicas
 
 - Análisis del municipio de Managua + Ciudad Sandino + Ticuantepe (Nindirí excluido).
-- Deduplicación entre portales: misma ubicación (±110 m) y precio similar → una sola fila,
-  se queda la primera según el orden kw, qc, mb, sv, dn.
+- Deduplicación entre portales: solo cuando hay evidencia numérica de que es el mismo inmueble
+  (≤110 m, precio ≤3 % y m²/lote ≤5 % o programa igual). Sin evidencia se conservan ambos,
+  porque las fuentes geocodificadas comparten el centroide del barrio.
 - El dataset refleja el **segmento formal** (propiedades con agencia inmobiliaria); no incluye
   ventas entre particulares ni mercado informal. Los promedios no representan todo el mercado.
 - Análisis independiente con fines informativos. No constituye avalúo ni oferta.

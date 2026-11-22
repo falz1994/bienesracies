@@ -1,19 +1,19 @@
 {
  "v": 1,
- "generado": "2026-11-21T22:48:29",
+ "generado": "2026-11-21T23:16:25",
  "extracciones": [
   {
    "fecha": "2026-09-03",
-   "listados": 1665,
-   "casas": 1030,
-   "mediana": 190000,
-   "promedio": 316714,
+   "listados": 1947,
+   "casas": 1248,
+   "mediana": 200000,
+   "promedio": 317618,
    "por_fuente": {
-    "kw": 677,
-    "qc": 514,
-    "mb": 290,
-    "sv": 17,
-    "dn": 167
+    "kw": 708,
+    "qc": 647,
+    "mb": 326,
+    "sv": 18,
+    "dn": 248
    },
    "nuevos": null,
    "retirados": null,
@@ -22,45 +22,45 @@
   },
   {
    "fecha": "2026-11-21",
-   "listados": 1577,
-   "casas": 954,
-   "mediana": 189000,
-   "promedio": 327094,
+   "listados": 1845,
+   "casas": 1155,
+   "mediana": 200000,
+   "promedio": 325253,
    "por_fuente": {
-    "kw": 623,
-    "qc": 503,
-    "mb": 280,
-    "sv": 18,
-    "dn": 153
+    "kw": 654,
+    "qc": 628,
+    "mb": 313,
+    "sv": 21,
+    "dn": 229
    },
-   "nuevos": 281,
-   "retirados": 369,
+   "nuevos": 257,
+   "retirados": 359,
    "mediana_pct": 0.0,
-   "mediana_pct_cambios": -5.88,
-   "pct_cambiaron": 6.4
+   "mediana_pct_cambios": -5.59,
+   "pct_cambiaron": 5.67
   }
  ],
  "ultimo_cambio": {
   "desde": "2026-09-03",
   "hasta": "2026-11-21",
-  "nuevos": 281,
-  "retirados": 369,
-  "comunes": 1296,
+  "nuevos": 257,
+  "retirados": 359,
+  "comunes": 1588,
   "precio": {
-   "con_precio": 1296,
-   "subieron": 18,
-   "bajaron": 65,
-   "iguales": 1213,
-   "cambiaron": 83,
-   "pct_cambiaron": 6.4,
+   "con_precio": 1588,
+   "subieron": 20,
+   "bajaron": 70,
+   "iguales": 1498,
+   "cambiaron": 90,
+   "pct_cambiaron": 5.67,
    "mediana_pct": 0.0,
-   "media_pct": 117.69,
+   "media_pct": 62.66,
    "p25_pct": 0.0,
    "p75_pct": 0.0,
-   "mediana_pct_cambios": -5.88,
-   "media_pct_cambios": 1837.69,
+   "mediana_pct_cambios": -5.59,
+   "media_pct_cambios": 1105.61,
    "p25_pct_cambios": -10.0,
-   "p75_pct_cambios": -2.44,
+   "p75_pct_cambios": -2.33,
    "mayor_subida": {
     "id": "kw:2080817606415270",
     "zona": "Ciudad el Doral",
@@ -80,47 +80,47 @@
   },
   "por_fuente": {
    "kw": {
-    "antes": 677,
-    "ahora": 623,
-    "nuevos": 211,
-    "retirados": 265,
-    "comunes": 412,
+    "antes": 708,
+    "ahora": 654,
+    "nuevos": 215,
+    "retirados": 269,
+    "comunes": 439,
     "subieron": 5,
-    "bajaron": 56,
-    "cambiaron": 61,
+    "bajaron": 57,
+    "cambiaron": 62,
     "mediana_pct": 0.0,
-    "mediana_pct_cambios": -6.67
+    "mediana_pct_cambios": -6.9
    },
    "qc": {
-    "antes": 514,
-    "ahora": 503,
-    "nuevos": 30,
-    "retirados": 41,
-    "comunes": 473,
-    "subieron": 5,
-    "bajaron": 4,
-    "cambiaron": 9,
+    "antes": 647,
+    "ahora": 628,
+    "nuevos": 17,
+    "retirados": 36,
+    "comunes": 611,
+    "subieron": 6,
+    "bajaron": 5,
+    "cambiaron": 11,
     "mediana_pct": 0.0,
     "mediana_pct_cambios": 2.38
    },
    "mb": {
-    "antes": 290,
-    "ahora": 280,
-    "nuevos": 27,
-    "retirados": 37,
-    "comunes": 253,
+    "antes": 326,
+    "ahora": 313,
+    "nuevos": 12,
+    "retirados": 25,
+    "comunes": 301,
     "subieron": 7,
-    "bajaron": 0,
-    "cambiaron": 7,
+    "bajaron": 1,
+    "cambiaron": 8,
     "mediana_pct": 0.0,
-    "mediana_pct_cambios": 19.35
+    "mediana_pct_cambios": 7.92
    },
    "sv": {
-    "antes": 17,
-    "ahora": 18,
-    "nuevos": 3,
+    "antes": 18,
+    "ahora": 21,
+    "nuevos": 5,
     "retirados": 2,
-    "comunes": 15,
+    "comunes": 16,
     "subieron": 0,
     "bajaron": 1,
     "cambiaron": 1,
@@ -128,79 +128,79 @@
     "mediana_pct_cambios": -4.08
    },
    "dn": {
-    "antes": 167,
-    "ahora": 153,
-    "nuevos": 10,
-    "retirados": 24,
-    "comunes": 143,
-    "subieron": 1,
-    "bajaron": 4,
-    "cambiaron": 5,
+    "antes": 248,
+    "ahora": 229,
+    "nuevos": 8,
+    "retirados": 27,
+    "comunes": 221,
+    "subieron": 2,
+    "bajaron": 6,
+    "cambiaron": 8,
     "mediana_pct": 0.0,
-    "mediana_pct_cambios": -5.26
+    "mediana_pct_cambios": -5.17
    }
   },
   "zonas": [
    {
     "zona": "Santo Domingo",
-    "nuevos": 15,
-    "retirados": 18,
-    "comunes": 111,
+    "nuevos": 5,
+    "retirados": 24,
+    "comunes": 189,
     "mediana_pct": 0.0
    },
    {
     "zona": "Centro Histórico Cultural",
-    "nuevos": 9,
-    "retirados": 17,
-    "comunes": 86,
+    "nuevos": 12,
+    "retirados": 9,
+    "comunes": 176,
     "mediana_pct": 0.0
    },
    {
     "zona": "Reparto Santa María del Lago",
-    "nuevos": 9,
-    "retirados": 8,
-    "comunes": 76,
+    "nuevos": 3,
+    "retirados": 6,
+    "comunes": 106,
     "mediana_pct": 0.0
    },
    {
     "zona": "Las Colinas",
     "nuevos": 10,
-    "retirados": 8,
-    "comunes": 64,
+    "retirados": 5,
+    "comunes": 85,
     "mediana_pct": 0.0
    },
    {
     "zona": "Villa Fontana Sur",
-    "nuevos": 5,
-    "retirados": 17,
-    "comunes": 59,
-    "mediana_pct": 0.0
-   },
-   {
-    "zona": "Las Palmas",
     "nuevos": 4,
-    "retirados": 6,
-    "comunes": 35,
-    "mediana_pct": 0.0
-   },
-   {
-    "zona": "Édgard Lang",
-    "nuevos": 3,
-    "retirados": 3,
-    "comunes": 37,
+    "retirados": 16,
+    "comunes": 78,
     "mediana_pct": 0.0
    },
    {
     "zona": "Bolonia",
     "nuevos": 4,
+    "retirados": 3,
+    "comunes": 43,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Las Palmas",
+    "nuevos": 1,
     "retirados": 5,
-    "comunes": 33,
+    "comunes": 40,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Édgard Lang",
+    "nuevos": 2,
+    "retirados": 2,
+    "comunes": 39,
     "mediana_pct": 0.0
    },
    {
     "zona": "Barrio Benjamín Zeledón",
     "nuevos": 1,
-    "retirados": 4,
+    "retirados": 5,
     "comunes": 29,
     "mediana_pct": 0.0
    },
@@ -208,7 +208,7 @@
     "zona": "Esquipulas",
     "nuevos": 2,
     "retirados": 4,
-    "comunes": 19,
+    "comunes": 22,
     "mediana_pct": 0.0
    }
   ]

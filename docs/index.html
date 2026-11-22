@@ -280,7 +280,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
     <div class="c"><h3>FUENTES DE DATOS</h3>
       <p><b>KW Nicaragua</b>: API GraphQL pública, con coordenadas nativas. <b>QuieroCasa</b>, <b>Momotombo</b> y <b>Sovinic</b>: HTML sin API ni coordenadas — geocodificadas por ubicación con OpenStreetMap/Nominatim.</p></div>
     <div class="c verde"><h3>CONSOLIDACIÓN</h3>
-      <p>Deduplicación entre portales (±110 m y precio similar), filtro a Managua + Ciudad Sandino + Ticuantepe (Nindirí excluido) y ranking por promedio de venta.</p></div>
+      <p>Deduplicación entre portales con evidencia (≤110 m, precio y tamaño), filtro a Managua + Ciudad Sandino + Ticuantepe (Nindirí excluido) y ranking por promedio de venta.</p></div>
     <div class="c morado"><h3>OPORTUNIDADES FUTURAS</h3>
       <p>Encuentra24, Facebook Marketplace y clasificados entre particulares; precio por m²; históricos y propiedades vendidas; alquileres y más segmentos.</p></div>
   </div>
@@ -712,7 +712,7 @@ async function cargar() {
       <div class="c"><b>5</b><span>fuentes consolidadas</span></div>
       <div class="c"><b>${fmtK(cs.media)}</b><span>precio medio de casa</span></div>
       <div class="c"><b>${fmtK(cs.p25)}–${fmtK(cs.p75)}</b><span>mitad de las casas</span></div>
-      <div class="c"><b>${stats.repetidos}</b><span>repetidos eliminados</span></div>`;
+      <div class="c"><b>${stats.repetidos}</b><span>duplicados entre portales</span></div>`;
 
   const filas = (arr) => arr.map(z =>
     `<tr><td>${z.zona}</td><td>${z.n}</td><td>${fmt(z.promedio)}</td></tr>`).join('');

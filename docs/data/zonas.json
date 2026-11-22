@@ -2,15 +2,15 @@
  "caras": [
   {
    "zona": "Las Palmas",
-   "n": 37,
-   "promedio": 681406,
-   "mediana": 310000
+   "n": 39,
+   "promedio": 664770,
+   "mediana": 300000
   },
   {
    "zona": "Villa Fontana Sur",
-   "n": 34,
-   "promedio": 573403,
-   "mediana": 445000
+   "n": 47,
+   "promedio": 601838,
+   "mediana": 450000
   },
   {
    "zona": "Los Altos de Santo Domingo",
@@ -32,33 +32,33 @@
   },
   {
    "zona": "Santo Domingo",
-   "n": 79,
-   "promedio": 466266,
-   "mediana": 419000
-  },
-  {
-   "zona": "Las Colinas",
-   "n": 40,
-   "promedio": 377885,
-   "mediana": 347840
-  },
-  {
-   "zona": "Centro Histórico Cultural",
-   "n": 77,
-   "promedio": 359477,
-   "mediana": 285000
-  },
-  {
-   "zona": "Los Robles",
-   "n": 11,
-   "promedio": 359436,
-   "mediana": 370000
+   "n": 137,
+   "promedio": 452814,
+   "mediana": 380000
   },
   {
    "zona": "Édgard Lang",
    "n": 36,
-   "promedio": 350811,
-   "mediana": 277000
+   "promedio": 404611,
+   "mediana": 315000
+  },
+  {
+   "zona": "Las Colinas",
+   "n": 54,
+   "promedio": 369975,
+   "mediana": 330000
+  },
+  {
+   "zona": "Reparto San Juan",
+   "n": 12,
+   "promedio": 349583,
+   "mediana": 315000
+  },
+  {
+   "zona": "Los Robles",
+   "n": 14,
+   "promedio": 348129,
+   "mediana": 360000
   }
  ],
  "baratas": [

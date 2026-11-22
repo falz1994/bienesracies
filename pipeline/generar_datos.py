@@ -14,6 +14,7 @@ import json
 import math
 import os
 import shutil
+import re
 import statistics
 import sys
 
@@ -33,6 +34,15 @@ for _n in rutas.CSVS + rutas.GEOJSONS:
     _origen = rutas.PUB / _n
     if not _destino.exists() and _origen.exists():
         shutil.copy2(_origen, _destino)
+
+
+def es_alquiler(*textos):
+    """True si el aviso es de alquiler: operación explícita o título que empieza
+    con "en renta/alquiler" sin mencionar venta (hay portales que mezclan ambos)."""
+    bajo = " ".join(str(x or "") for x in textos).lower()
+    if re.search(r"\b(en\s+(renta|alquiler)\b)", bajo) and not re.search(r"\bventa\b", bajo):
+        return True
+    return False
 
 MANAGUA_OK = {"managua", "ciudad sandino", "ticuantepe"}
 BBOX = {"s": 11.98, "n": 12.26, "o": -86.48, "e": -86.10}
@@ -173,6 +183,8 @@ def qc_rows():
         d = (r.get("departamento") or "").strip().lower()
         if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
             continue
+        if es_alquiler(r.get("titulo")):
+            continue
         if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
             continue
         yield {"id": r["codigo"], "fuente": "qc", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
@@ -189,6 +201,10 @@ def mb_rows():
         m = (r.get("municipio") or "").strip().lower()
         d = (r.get("departamento") or "").strip().lower()
         if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
+            continue
+        if (r.get("operacion") or "").strip().lower() in ("renta", "alquiler"):
+            continue
+        if es_alquiler(r.get("titulo")):
             continue
         if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
             continue
@@ -208,6 +224,8 @@ def sv_rows():
         d = (r.get("departamento") or "").strip().lower()
         if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
             continue
+        if es_alquiler(r.get("titulo"), r.get("slug")):
+            continue
         if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
             continue
         yield {"id": "sv" + r["id"], "fuente": "sv", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
@@ -225,6 +243,8 @@ def dn_rows():
         d = (r.get("departamento") or "").strip().lower()
         if m not in MANAGUA_OK and not (m == "" and d in MANAGUA_OK):
             continue
+        if es_alquiler(r.get("titulo")):
+            continue
         if not r["precio"] or not en_bbox(_f(r["lat"]), _f(r["lng"])):
             continue
         yield {"id": "dn" + r["id"], "fuente": "dn", "lat": _f(r["lat"]), "lng": _f(r["lng"]),
@@ -236,19 +256,110 @@ def dn_rows():
                "distrito": distrito_de(_f(r["lat"]), _f(r["lng"]), r.get("municipio"))}
 
 
+ORDEN_FUENTES = {"kw": 0, "qc": 1, "mb": 2, "sv": 3, "dn": 4}
+LADO_CELDA = 0.0015  # ~165 m
+
+
+def _dist_m(lat1, lng1, lat2, lng2):
+    R = 6371000.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp, dl = p2 - p1, math.radians(lng2 - lng1)
+    h = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(h))
+
+
+def _razon(a, b):
+    try:
+        return max(a, b) / min(a, b)
+    except (TypeError, ZeroDivisionError):
+        return None
+
+
+def _mismo_inmueble(a, b):
+    """¿Dos avisos son la misma propiedad? Exige evidencia positiva; el precio y la
+    cercanía solos NO alcanzan porque las fuentes geocodificadas comparten el
+    centroide del barrio (fusionarlas borraría casas distintas del mismo barrio)."""
+    if not a["p"] or not b["p"]:
+        return False
+    if a["fuente"] == b["fuente"]:
+        # dentro de un portal, dos avisos parecidos suelen ser unidades distintas
+        # del mismo proyecto (p. ej. lotes #2, #3, #4 de un residencial): no se fusionan
+        return False
+    rp = _razon(a["p"], b["p"])
+    if rp is None or rp > 1.03:
+        return False
+
+    m2a, m2b = a.get("m2"), b.get("m2")
+    lota, lotb = a.get("lote"), b.get("lote")
+    if a["fuente"] == "dn" and lota:
+        lota = lota * 0.698896            # Discover publica varas²
+    if b["fuente"] == "dn" and lotb:
+        lotb = lotb * 0.698896
+
+    # veto: si ambos publican programa y no coincide, son inmuebles distintos
+    hab_a, hab_b = a.get("hab"), b.get("hab")
+    ban_a, ban_b = a.get("banos"), b.get("banos")
+    if hab_a is not None and hab_b is not None and hab_a != hab_b:
+        return False
+    if ban_a is not None and ban_b is not None and abs(float(ban_a) - float(ban_b)) > 0.01:
+        return False
+
+    evidencia = False
+    if m2a and m2b:
+        if _razon(m2a, m2b) > 1.05:
+            return False
+        evidencia = True
+    elif lota and lotb:
+        if _razon(lota, lotb) > 1.05:
+            return False
+        evidencia = True
+    if not evidencia and hab_a is not None and hab_a == hab_b and \
+            ban_a is not None and ban_a == ban_b:
+        evidencia = True                  # mismo programa completo
+    if not evidencia:
+        # sin m², lote ni programa no hay forma de probar que sea el mismo inmueble
+        # (las fuentes geocodificadas comparten el centroide del barrio): se conservan ambos
+        return False
+    return True
+
+
 def dedupe(items):
-    out, dups = [], 0
-    vistos = set()
-    for it in items:
-        if not it["lat"] or not it["lng"] or not it["p"]:
+    """Deduplica por cercanía + evidencia de que es el mismo inmueble.
+    Devuelve (únicos, n_descartados) y deja la auditoría en pipeline/datos/."""
+    ordenados = sorted((x for x in items if x["lat"] and x["lng"] and x["p"]),
+                       key=lambda x: (ORDEN_FUENTES.get(x["fuente"], 9), str(x["id"])))
+    grilla, out, audit = {}, [], []
+    for it in ordenados:
+        cx, cy = int(it["lat"] / LADO_CELDA), int(it["lng"] / LADO_CELDA)
+        match = None
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for prev in grilla.get((cx + dx, cy + dy), ()):
+                    if _dist_m(prev["lat"], prev["lng"], it["lat"], it["lng"]) > 110:
+                        continue
+                    if _mismo_inmueble(prev, it):
+                        match = prev
+                        break
+                if match:
+                    break
+            if match:
+                break
+        if match:
+            audit.append({"se_descarta": f"{it['fuente']}:{it['id']}",
+                          "precio": it["p"], "m2": it.get("m2"), "hab": it.get("hab"),
+                          "se_conserva": f"{match['fuente']}:{match['id']}",
+                          "precio_conservado": match["p"], "m2_conservado": match.get("m2"),
+                          "hab_conservado": match.get("hab"), "zona": it.get("zona")})
             continue
-        k = (round(it["lat"], 3), round(it["lng"], 3), int(it["p"] / 1000))
-        if k in vistos:
-            dups += 1
-            continue
-        vistos.add(k)
         out.append(it)
-    return out, dups
+        grilla.setdefault((cx, cy), []).append(it)
+    try:
+        import json as _json
+        with open(f"{ANALISIS}/_dedupe_audit.json", "w", encoding="utf-8") as f:
+            _json.dump(audit, f, ensure_ascii=False, indent=1)
+    except OSError:
+        pass
+    return out, len(audit)
 
 
 def main():

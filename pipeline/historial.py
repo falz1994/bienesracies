@@ -80,6 +80,34 @@ def guardar_snapshot(snap):
     return destino
 
 
+def snapshot_desde_csv(directorio, fecha):
+    """Reconstruye un snapshot aplicando la misma consolidación a un directorio de
+    CSV crudos (p. ej. un backup), para backfill de la serie histórica."""
+    import generar_datos as gd
+
+    gd.ANALISIS = str(directorio)
+    items = (list(gd.kw_rows()) + list(gd.qc_rows()) + list(gd.mb_rows())
+             + list(gd.sv_rows()) + list(gd.dn_rows()))
+    unicos, dups = gd.dedupe(items)
+    for x in unicos:
+        b = gd.barrio_de(x["lat"], x["lng"])
+        if b and b != x["zona"]:
+            x["zona_orig"] = x["zona"]
+            x["zona"] = b
+    stats = {
+        "fecha": fecha,
+        "global": {"n": len(unicos)},
+        "casas": {"n": sum(1 for x in unicos if x["casa"])},
+        **{f: {"n": sum(1 for x in unicos if x["fuente"] == f)}
+           for f in ("kw", "qc", "mb", "sv", "dn")},
+        "repetidos": dups,
+    }
+    listados = [{"fuente": x["fuente"], "id": x["id"], "p": x["p"], "m2": x["m2"],
+                 "lote": x["lote"], "zona": x["zona"], "distrito": x["distrito"],
+                 "casa": x["casa"], "lat": x["lat"], "lng": x["lng"]} for x in unicos]
+    return guardar_snapshot(construir_snapshot(listados, stats, f"csv:{Path(directorio).name}"))
+
+
 def _lista_snapshots():
     return sorted(rutas.SNAPSHOTS.glob("*.json"))
 
@@ -286,11 +314,14 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--snapshot", action="store_true", help="snapshot de la extracción actual")
     ap.add_argument("--desde-git", metavar="SHA", help="snapshot reconstruido de un commit")
+    ap.add_argument("--desde-csv", metavar="DIR",
+                    help="snapshot reconstruido desde un directorio de CSV crudos (backfill)")
+    ap.add_argument("--fecha", help="fecha a usar con --desde-csv (YYYY-MM-DD)")
     ap.add_argument("--diff", action="store_true", help="diff entre los dos últimos snapshots")
     ap.add_argument("--serie", action="store_true", help="regenera docs/data/historico.json")
     args = ap.parse_args()
 
-    if not (args.snapshot or args.desde_git or args.diff or args.serie):
+    if not (args.snapshot or args.desde_git or args.desde_csv or args.diff or args.serie):
         ap.print_help()
         return 1
 
@@ -298,6 +329,12 @@ def main():
         listados = _leer_de_git(args.desde_git, "docs/data/listados.json")
         stats = _leer_de_git(args.desde_git, "docs/data/stats.json")
         guardar_snapshot(construir_snapshot(listados, stats, f"git:{args.desde_git[:7]}"))
+
+    if args.desde_csv:
+        if not args.fecha:
+            print("--desde-csv requiere --fecha", file=sys.stderr)
+            return 1
+        snapshot_desde_csv(Path(args.desde_csv), args.fecha)
 
     if args.snapshot:
         listados = _leer_json(rutas.publicado("listados.json"))

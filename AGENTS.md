@@ -21,8 +21,12 @@ Todo vive en este repo. El sitio (`docs/`) es lo único que Vercel publica.
 - **Nominatim**: máx 1 req/seg, `User-Agent` obligatorio, `countrycodes=ni`. No conoce las
   urbanizaciones nuevas del gobierno → usar **Overpass API** para esos nombres.
   Si hay entradas `null` viejas en el cache, borrarlas para re-consultar (`run.sh` lo hace).
-- **Dedupe entre portales**: misma ubicación ±110 m (round lat/lng a 3 decimales) + precio en el
-  mismo millar → una sola fila. Orden: kw, qc, mb, sv, dn (se queda el primero).
+- **Dedupe entre portales**: ≤110 m + precio a ≤3 % **y evidencia de que es el mismo inmueble**
+  (m² a ≤5 % o lote a ≤5 % o programa completo igual). Sin evidencia se conservan ambos: las
+  fuentes geocodificadas comparten el centroide del barrio y el dedupe antiguo (precio en el mismo
+  millar) borraba casas distintas. Nunca se fusiona dentro del mismo portal (son unidades
+  distintas del mismo proyecto: lotes #2, #3, #4…). Auditoría en `pipeline/datos/_dedupe_audit.json`.
+  Orden de preferencia al fusionar: kw, qc, mb, sv, dn (se queda el primero).
 - **Filtro territorial**: municipio de Managua + Ciudad Sandino + Ticuantepe. BBOX aproximado
   lat 11.98–12.26, lng −86.48 a −86.10 (Nindirí, Tipitapa, Mateare y Masaya quedan fuera).
 - **Métrica principal = PROMEDIO** (así lo pidió el usuario). La mediana existe internamente y en el
@@ -52,6 +56,7 @@ pipeline/generar_programas_gobierno.py
 pipeline/generar_slides.py 9 PNG 1080×1920
 pipeline/historial.py     snapshots, diffs y serie docs/data/historico.json
 pipeline/analisis_cambios.py  informe de cambios (portal vs dataset, precios por barrio)
+pipeline/cruzar_fuentes.py  misma propiedad en varios portales + diferencia de precio
 pipeline/verificar_sitio.py   verificación del sitio servido por HTTP
 pipeline/validar_datos.py invariantes; corta el run si algo no cuadra
 pipeline/datos/           datos de trabajo (gitignored)

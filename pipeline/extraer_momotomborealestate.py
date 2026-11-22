@@ -109,6 +109,9 @@ def main():
                if pag == 1 else
                BASE + f"/search-result-page/page/{pag}/?type%5B0%5D=family-home&#038;keyword&#038;min-price&#038;max-price&#038;property_id")
         for t in parsear_pagina(get(url)):
+            # el sitio devuelve venta y alquiler en la misma búsqueda: solo ventas
+            if (t.get("operacion") or "").lower() in ("renta", "alquiler"):
+                continue
             if t["id"] and t["id"] not in vistos:
                 todo[t["id"]] = t
         print(f"  pág {pag}/{max_pag} → {len(todo)} únicos", flush=True)

@@ -1,0 +1,524 @@
+{
+ "resumen": {
+  "listados_analizados": 1852,
+  "grupos": 13,
+  "avisos_en_grupos": 26,
+  "pct_del_dataset": 1.4,
+  "por_confianza": {
+   "alta": 1,
+   "media": 4,
+   "baja": 8
+  },
+  "por_par_de_fuentes": {
+   "dn-qc": 8,
+   "kw-qc": 5
+  },
+  "spread_mediana_pct": 5.26,
+  "spread_media_pct": 4.38,
+  "tramos": {
+   "≤2%": 3,
+   "2-5%": 3,
+   "5-10%": 7,
+   "10-20%": 0,
+   ">20%": 0
+  },
+  "veces_mas_barato": {
+   "dn": 6,
+   "qc": 4,
+   "kw": 3
+  },
+  "veces_mas_caro": {
+   "qc": 6,
+   "dn": 5,
+   "kw": 2
+  },
+  "discrepancias_gt10": 0,
+  "params": {
+   "min_confianza": "baja",
+   "tolerancias": {
+    "precio": 1.08,
+    "m2": 1.05,
+    "lote": 1.05,
+    "hab": 0
+   }
+  }
+ },
+ "grupos": [
+  {
+   "confianza": "alta",
+   "señales": [
+    "baños",
+    "hab",
+    "lote",
+    "m2~",
+    "precio="
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 500000,
+   "precio_max": 500000,
+   "spread_pct": 0.0,
+   "mas_barato": "dn",
+   "mas_caro": "dn",
+   "m2": 400.0,
+   "lote_m2": 1118,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn9267",
+     "precio": 500000,
+     "m2": 400.0,
+     "zona": "Santo Domingo",
+     "url": "https://discovernica.com/propiedades/detalles/9267/casa-venta-en-santo-domingo-4-habitaciones-4-baños-sala-cocina-piscina",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc7046",
+     "precio": 500000,
+     "m2": 420.0,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc7046/0/preciosa-casa-en-venta-en-santo-domingo.htm",
+     "titulo": "Preciosa Casa en Venta en Santo Domingo"
+    }
+   ]
+  },
+  {
+   "confianza": "media",
+   "señales": [
+    "baños",
+    "hab",
+    "m2~",
+    "precio~"
+   ],
+   "zona": "Carretera A Las Nubes #Condominio Paseo Del Club",
+   "distrito": "Distrito I",
+   "precio_min": 260000,
+   "precio_max": 270000,
+   "spread_pct": 3.85,
+   "mas_barato": "kw",
+   "mas_caro": "qc",
+   "m2": 228.9,
+   "lote_m2": 287,
+   "avisos": [
+    {
+     "fuente": "qc",
+     "id": "qc4603",
+     "precio": 270000,
+     "m2": 223.0,
+     "zona": "Villa Fontana",
+     "url": "https://www.quierocasa.com/anuncio/qc4603/0/apartamento-de-ensueno-en-venta-descubre-tu-nuevo-hogar.htm",
+     "titulo": "Apartamento de Ensueño en Venta: Descubre tu Nuevo Hogar"
+    },
+    {
+     "fuente": "kw",
+     "id": "2057506228840092",
+     "precio": 260000,
+     "m2": 228.9,
+     "zona": "Carretera A Las Nubes #Condominio Paseo Del Club",
+     "url": "https://kwnicaragua.kw.com/property/Carretera-A-Las-Nubes-Condominio-paseo-del-club-Villa-fontana-norte-Condominio-paseo-del-club-Villa-fontana-norte-Condominio-paseo-del-club-Villa-fontana-norte-Managua-MN/2057506228840092",
+     "titulo": ""
+    }
+   ]
+  },
+  {
+   "confianza": "media",
+   "señales": [
+    "baños",
+    "hab",
+    "precio~"
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 245000,
+   "precio_max": 250000,
+   "spread_pct": 2.04,
+   "mas_barato": "dn",
+   "mas_caro": "qc",
+   "m2": 180.0,
+   "lote_m2": 399,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn15128",
+     "precio": 245000,
+     "m2": 180.0,
+     "zona": "Santo Domingo",
+     "url": "https://discovernica.com/propiedades/detalles/15128/casa-venta-santo-domingo-3-habitaciones",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc6413",
+     "precio": 250000,
+     "m2": null,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc6413/0/hermosa-casa-para-venta-hazla-tuya.htm",
+     "titulo": "Hermosa Casa para Venta: ¡Hazla Tuya!"
+    }
+   ]
+  },
+  {
+   "confianza": "media",
+   "señales": [
+    "baños",
+    "hab",
+    "precio="
+   ],
+   "zona": "Villa Fontana",
+   "distrito": "Distrito I",
+   "precio_min": 200000,
+   "precio_max": 200000,
+   "spread_pct": 0.0,
+   "mas_barato": "dn",
+   "mas_caro": "dn",
+   "m2": 200.0,
+   "lote_m2": 576,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn12765",
+     "precio": 200000,
+     "m2": 200.0,
+     "zona": "Villa Fontana",
+     "url": "https://discovernica.com/propiedades/detalles/12765/casa-venta-villa-fontana",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc7221",
+     "precio": 200000,
+     "m2": null,
+     "zona": "Villa Fontana",
+     "url": "https://www.quierocasa.com/anuncio/qc7221/0/tu-nuevo-hogar-te-espera-en-villa-fontana.htm",
+     "titulo": "Tu Nuevo Hogar te Espera en Villa Fontana"
+    }
+   ]
+  },
+  {
+   "confianza": "media",
+   "señales": [
+    "baños",
+    "hab",
+    "precio="
+   ],
+   "zona": "Carretera Sur",
+   "distrito": "Distrito III",
+   "precio_min": 165000,
+   "precio_max": 165000,
+   "spread_pct": 0.0,
+   "mas_barato": "dn",
+   "mas_caro": "dn",
+   "m2": 439.39,
+   "lote_m2": 683,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn13995",
+     "precio": 165000,
+     "m2": 439.39,
+     "zona": "Carretera Sur",
+     "url": "https://discovernica.com/propiedades/detalles/13995/casa-1-piso-carretera-sur-venta-3-habitaciones-semiamueblada",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "c304n",
+     "precio": 165000,
+     "m2": null,
+     "zona": "Carretera Sur",
+     "url": "https://www.quierocasa.com/anuncio/c304n/0/venta-de-casa-crr-sur-cod-c304n.htm",
+     "titulo": "Venta de casa, Crr Sur cod: C304N"
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 260000,
+   "precio_max": 280000,
+   "spread_pct": 7.69,
+   "mas_barato": "qc",
+   "mas_caro": "kw",
+   "m2": 240.0,
+   "lote_m2": 614,
+   "avisos": [
+    {
+     "fuente": "qc",
+     "id": "qc4735",
+     "precio": 260000,
+     "m2": null,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc4735/0/preciosa-casa-en-la-estancia-santo-domingo.htm",
+     "titulo": "Preciosa casa en La estancia Santo Domingo"
+    },
+    {
+     "fuente": "kw",
+     "id": "2130319641323142",
+     "precio": 280000,
+     "m2": 240.0,
+     "zona": "Santo Domingo",
+     "url": "https://kwnicaragua.kw.com/property/Santo-Domingo-Managua-Managua/2130319641323142",
+     "titulo": ""
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Carretera A Masaya",
+   "distrito": "Distrito V",
+   "precio_min": 185000,
+   "precio_max": 199000,
+   "spread_pct": 7.57,
+   "mas_barato": "kw",
+   "mas_caro": "qc",
+   "m2": 169.71,
+   "lote_m2": 557,
+   "avisos": [
+    {
+     "fuente": "qc",
+     "id": "qc7094",
+     "precio": 199000,
+     "m2": null,
+     "zona": "Carretera A Masaya",
+     "url": "https://www.quierocasa.com/anuncio/qc7094/0/casa-en-venta-en-carretera-a-masaya.htm",
+     "titulo": "Casa en Venta en Carretera a Masaya"
+    },
+    {
+     "fuente": "kw",
+     "id": "2159456059099444",
+     "precio": 185000,
+     "m2": 169.71,
+     "zona": "Carretera A Masaya",
+     "url": "https://kwnicaragua.kw.com/property/Carretera-a-MasayaKm-132-Km-132-Carretera-a-Masaya-Managua-Ticuantepe/2159456059099444",
+     "titulo": ""
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 550000,
+   "precio_max": 590000,
+   "spread_pct": 7.27,
+   "mas_barato": "qc",
+   "mas_caro": "kw",
+   "m2": 350.0,
+   "lote_m2": 828,
+   "avisos": [
+    {
+     "fuente": "qc",
+     "id": "qc5424",
+     "precio": 550000,
+     "m2": null,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc5424/0/hermosa-residencia-en-venta-vive-el-estilo-de-vida-que-mereces.htm",
+     "titulo": "Hermosa residencia en venta: Vive el estilo de vida que mereces"
+    },
+    {
+     "fuente": "kw",
+     "id": "2041215414458696",
+     "precio": 590000,
+     "m2": 350.0,
+     "zona": "Santo Domingo",
+     "url": "https://kwnicaragua.kw.com/property/Santo-Domingo-Managua-Managua/2041215414458696",
+     "titulo": ""
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "lote"
+   ],
+   "zona": "Carretera A Masaya",
+   "distrito": "Managua",
+   "precio_min": 25327,
+   "precio_max": 27000,
+   "spread_pct": 6.61,
+   "mas_barato": "kw",
+   "mas_caro": "qc",
+   "m2": null,
+   "lote_m2": 243,
+   "avisos": [
+    {
+     "fuente": "qc",
+     "id": "qc6768",
+     "precio": 27000,
+     "m2": null,
+     "zona": "Carretera A Masaya",
+     "url": "https://www.quierocasa.com/anuncio/qc6768/0/terreno-en-venta-en-carretera-a-masaya.htm",
+     "titulo": "Terreno en Venta en Carretera a Masaya"
+    },
+    {
+     "fuente": "kw",
+     "id": "2176411191776504",
+     "precio": 25327,
+     "m2": null,
+     "zona": "Carretera A Masaya",
+     "url": "https://kwnicaragua.kw.com/property/Carretera-a-Masaya-Managua-MN/2176411191776504",
+     "titulo": ""
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 310000,
+   "precio_max": 330000,
+   "spread_pct": 6.45,
+   "mas_barato": "qc",
+   "mas_caro": "dn",
+   "m2": 380.0,
+   "lote_m2": 1468,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn14042",
+     "precio": 330000,
+     "m2": 380.0,
+     "zona": "Santo Domingo",
+     "url": "https://discovernica.com/propiedades/detalles/14042/casa-venta-santo-domingo-3-habitaciones-2.5-baños",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc6940",
+     "precio": 310000,
+     "m2": null,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc6940/0/casa-en-venta-en-santo-domingo.htm",
+     "titulo": "Casa en Venta en Santo Domingo"
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Santo Domingo",
+   "distrito": "Distrito I",
+   "precio_min": 330000,
+   "precio_max": 350000,
+   "spread_pct": 6.06,
+   "mas_barato": "qc",
+   "mas_caro": "dn",
+   "m2": 364.0,
+   "lote_m2": 712,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn14522",
+     "precio": 350000,
+     "m2": 364.0,
+     "zona": "Santo Domingo",
+     "url": "https://discovernica.com/propiedades/detalles/14522/casa-moderna-venta-en-santo-domingo",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc5922",
+     "precio": 330000,
+     "m2": null,
+     "zona": "Santo Domingo",
+     "url": "https://www.quierocasa.com/anuncio/qc5922/0/preciosa-residencia-en-venta.htm",
+     "titulo": "Preciosa residencia en venta"
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab"
+   ],
+   "zona": "Carretera Sur",
+   "distrito": "Distrito III",
+   "precio_min": 475000,
+   "precio_max": 500000,
+   "spread_pct": 5.26,
+   "mas_barato": "dn",
+   "mas_caro": "qc",
+   "m2": 508.47,
+   "lote_m2": 1392,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn13804",
+     "precio": 475000,
+     "m2": 508.47,
+     "zona": "Carretera Sur",
+     "url": "https://discovernica.com/propiedades/detalles/13804/Casa-en-venta-en-Carretera-Sur",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc4226",
+     "precio": 500000,
+     "m2": null,
+     "zona": "Carretera Sur",
+     "url": "https://www.quierocasa.com/anuncio/qc4226/0/espectacular-casa-en-venta.htm",
+     "titulo": "Espectacular casa en venta"
+    }
+   ]
+  },
+  {
+   "confianza": "baja",
+   "señales": [
+    "baños",
+    "hab",
+    "precio~"
+   ],
+   "zona": "",
+   "distrito": "Distrito I",
+   "precio_min": 172900,
+   "precio_max": 180000,
+   "spread_pct": 4.11,
+   "mas_barato": "dn",
+   "mas_caro": "qc",
+   "m2": 242.64,
+   "lote_m2": 315,
+   "avisos": [
+    {
+     "fuente": "dn",
+     "id": "dn13460",
+     "precio": 172900,
+     "m2": 242.64,
+     "zona": "",
+     "url": "https://discovernica.com/propiedades/detalles/13460/Casa en Venta, 3 habitaciones, 3 baños, amplia terraza",
+     "titulo": ""
+    },
+    {
+     "fuente": "qc",
+     "id": "qc6501",
+     "precio": 180000,
+     "m2": null,
+     "zona": "Managua",
+     "url": "https://www.quierocasa.com/anuncio/qc6501/0/casa-en-venta-cerca-del-colegio-americano.htm",
+     "titulo": "Casa en Venta cerca del Colegio Americano"
+    }
+   ]
+  }
+ ]
+}

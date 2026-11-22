@@ -45,8 +45,13 @@ def ids_crudos(ruta, fuente):
         return None
     with open(ruta, encoding="utf-8-sig", newline="") as f:
         filas = list(csv.DictReader(f))
+    import generar_datos as gd  # filtro compartido de alquileres
     ids = set()
     for r in filas:
+        if (r.get("operacion") or "").strip().lower() in ("renta", "alquiler"):
+            continue
+        if gd.es_alquiler(r.get("titulo"), r.get("slug"), r.get("slug_es")):
+            continue
         valor = ""
         for col in COL_ID.get(fuente, ()):
             if (r.get(col) or "").strip():
