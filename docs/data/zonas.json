@@ -2,101 +2,101 @@
  "caras": [
   {
    "zona": "Las Palmas",
-   "n": 39,
-   "promedio": 691566,
-   "mediana": 320000
+   "n": 37,
+   "promedio": 681406,
+   "mediana": 310000
+  },
+  {
+   "zona": "Villa Fontana Sur",
+   "n": 34,
+   "promedio": 573403,
+   "mediana": 445000
   },
   {
    "zona": "Los Altos de Santo Domingo",
    "n": 9,
-   "promedio": 530744,
+   "promedio": 572766,
    "mediana": 450000
   },
   {
-   "zona": "Villa Fontana Sur",
-   "n": 42,
-   "promedio": 518945,
-   "mediana": 362500
+   "zona": "Reparto de Santa Mónica",
+   "n": 5,
+   "promedio": 546600,
+   "mediana": 685000
   },
   {
    "zona": "Estancia de Santo Domingo",
-   "n": 4,
-   "promedio": 469750,
+   "n": 6,
+   "promedio": 519833,
    "mediana": 417500
   },
   {
    "zona": "Santo Domingo",
-   "n": 85,
-   "promedio": 447484,
-   "mediana": 395000
+   "n": 79,
+   "promedio": 466266,
+   "mediana": 419000
   },
   {
    "zona": "Las Colinas",
-   "n": 42,
-   "promedio": 374730,
-   "mediana": 330000
-  },
-  {
-   "zona": "Los Robles",
-   "n": 12,
-   "promedio": 366983,
-   "mediana": 372500
+   "n": 40,
+   "promedio": 377885,
+   "mediana": 347840
   },
   {
    "zona": "Centro Histórico Cultural",
-   "n": 87,
-   "promedio": 357623,
-   "mediana": 280000
+   "n": 77,
+   "promedio": 359477,
+   "mediana": 285000
   },
   {
-   "zona": "Reparto San Juan",
-   "n": 15,
-   "promedio": 323647,
-   "mediana": 295000
+   "zona": "Los Robles",
+   "n": 11,
+   "promedio": 359436,
+   "mediana": 370000
   },
   {
    "zona": "Édgard Lang",
-   "n": 37,
-   "promedio": 322696,
-   "mediana": 260000
+   "n": 36,
+   "promedio": 350811,
+   "mediana": 277000
   }
  ],
  "baratas": [
   {
    "zona": "Ciudad El Doral",
-   "n": 3,
-   "promedio": 44833,
-   "mediana": 46500
+   "n": 4,
+   "promedio": 50375,
+   "mediana": 47250
   },
   {
    "zona": "Vistas del Momotombo",
-   "n": 4,
-   "promedio": 51250,
-   "mediana": 43500
+   "n": 3,
+   "promedio": 50667,
+   "mediana": 39000
   },
   {
    "zona": "Valle Santa Rosa",
-   "n": 5,
-   "promedio": 52780,
+   "n": 3,
+   "promedio": 52633,
    "mediana": 51900
   },
   {
-   "zona": "Villa Reconciliación",
-   "n": 4,
-   "promedio": 58500,
-   "mediana": 62500
-  },
-  {
-   "zona": "San Judas",
-   "n": 4,
-   "promedio": 60875,
-   "mediana": 65000
+   "zona": "Villa Roma",
+   "n": 3,
+   "promedio": 64000,
+   "mediana": 67500
   },
   {
    "zona": "Praderas de Sandino",
-   "n": 5,
-   "promedio": 64000,
-   "mediana": 65000
+   "n": 4,
+   "promedio": 64875,
+   "mediana": 64500
+  },
+  {
+   "zona": "Motastepe",
+   "n": 3,
+   "promedio": 65000,
+   "mediana": 59500
   },
   {
    "zona": "Urbanización Ríos de Agua Viva",
@@ -113,14 +113,14 @@
   {
    "zona": "Barrio Cuba",
    "n": 3,
-   "promedio": 75667,
-   "mediana": 72000
+   "promedio": 74667,
+   "mediana": 69000
   },
   {
-   "zona": "Urbanizacion Villas de Xiloa",
-   "n": 14,
-   "promedio": 78779,
-   "mediana": 61500
+   "zona": "Santa Ana Sur",
+   "n": 3,
+   "promedio": 79333,
+   "mediana": 63000
   }
  ]
 }

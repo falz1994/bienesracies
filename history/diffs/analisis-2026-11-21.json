@@ -1,0 +1,658 @@
+{
+ "desde": "2026-09-03",
+ "hasta": "2026-11-21",
+ "dataset": {
+  "listados_antes": 1665,
+  "listados_ahora": 1577,
+  "delta": -88,
+  "delta_pct": -5.29,
+  "casas_antes": 1030,
+  "casas_ahora": 954,
+  "nuevos": 281,
+  "retirados": 369,
+  "comunes": 1296,
+  "supervivencia_pct": 77.84,
+  "retirados_pct": 22.16,
+  "nuevos_pct": 17.82
+ },
+ "portales": {
+  "kw": {
+   "nombre": "KW Nicaragua",
+   "dataset_antes": 677,
+   "dataset_ahora": 623,
+   "dataset_nuevos": 211,
+   "dataset_retirados": 265,
+   "portal_antes": 1389,
+   "portal_ahora": 1394,
+   "portal_siguen": 964,
+   "portal_salieron": 425,
+   "portal_entraron": 430,
+   "portal_salieron_pct": 30.6,
+   "retirados_que_siguen_en_portal": 3
+  },
+  "qc": {
+   "nombre": "QuieroCasa",
+   "dataset_antes": 514,
+   "dataset_ahora": 503,
+   "dataset_nuevos": 30,
+   "dataset_retirados": 41,
+   "portal_antes": 798,
+   "portal_ahora": 782,
+   "portal_siguen": 760,
+   "portal_salieron": 38,
+   "portal_entraron": 22,
+   "portal_salieron_pct": 4.8,
+   "retirados_que_siguen_en_portal": 11
+  },
+  "mb": {
+   "nombre": "Momotombo",
+   "dataset_antes": 290,
+   "dataset_ahora": 280,
+   "dataset_nuevos": 27,
+   "dataset_retirados": 37,
+   "portal_antes": 552,
+   "portal_ahora": 533,
+   "portal_siguen": 510,
+   "portal_salieron": 42,
+   "portal_entraron": 23,
+   "portal_salieron_pct": 7.6,
+   "retirados_que_siguen_en_portal": 10
+  },
+  "sv": {
+   "nombre": "Sovinic",
+   "dataset_antes": 17,
+   "dataset_ahora": 18,
+   "dataset_nuevos": 3,
+   "dataset_retirados": 2,
+   "portal_antes": 55,
+   "portal_ahora": 56,
+   "portal_siguen": 47,
+   "portal_salieron": 8,
+   "portal_entraron": 9,
+   "portal_salieron_pct": 14.5,
+   "retirados_que_siguen_en_portal": 0
+  },
+  "dn": {
+   "nombre": "Discover",
+   "dataset_antes": 167,
+   "dataset_ahora": 153,
+   "dataset_nuevos": 10,
+   "dataset_retirados": 24,
+   "portal_antes": 443,
+   "portal_ahora": 421,
+   "portal_siguen": 411,
+   "portal_salieron": 32,
+   "portal_entraron": 10,
+   "portal_salieron_pct": 7.2,
+   "retirados_que_siguen_en_portal": 0
+  }
+ },
+ "precio": {
+  "comparables": 1296,
+  "cambiaron": 83,
+  "pct_cambiaron": 6.4,
+  "subieron": 18,
+  "bajaron": 65,
+  "pct_bajaron_de_cambios": 78.3,
+  "mediana_pct_cambios": -5.88,
+  "media_pct_cambios": 1837.69,
+  "media_pct_cambios_sin_atipicos": -5.23,
+  "atipicos": [
+   {
+    "id": "mb:98811",
+    "antes": 4600.0,
+    "despues": 640000.0,
+    "pct": 13813.0
+   },
+   {
+    "id": "mb:98599",
+    "antes": 1000.0,
+    "despues": 180000.0,
+    "pct": 17900.0
+   },
+   {
+    "id": "kw:2080817606415270",
+    "antes": 70.0,
+    "despues": 70000.0,
+    "pct": 99900.0
+   },
+   {
+    "id": "mb:100023",
+    "antes": 3500.0,
+    "despues": 750000.0,
+    "pct": 21328.6
+   }
+  ],
+  "p25_pct_cambios": -10.0,
+  "p75_pct_cambios": -2.44,
+  "buckets": {
+   ">20%": 10,
+   "10–20%": 18,
+   "5–10%": 33,
+   "2–5%": 21,
+   "0,5–2%": 1
+  },
+  "mayor_bajada": [
+   "dn:dn15107",
+   1600059.0,
+   800028.0,
+   -50.000093746543094
+  ],
+  "mayor_subida": [
+   "kw:2080817606415270",
+   70.0,
+   70000.0,
+   99900.0
+  ],
+  "por_fuente": {
+   "kw": {
+    "cambiaron": 61,
+    "subieron": 5,
+    "bajaron": 56
+   },
+   "qc": {
+    "cambiaron": 9,
+    "subieron": 5,
+    "bajaron": 4
+   },
+   "mb": {
+    "cambiaron": 7,
+    "subieron": 7,
+    "bajaron": 0
+   },
+   "sv": {
+    "cambiaron": 1,
+    "subieron": 0,
+    "bajaron": 1
+   },
+   "dn": {
+    "cambiaron": 5,
+    "subieron": 1,
+    "bajaron": 4
+   }
+  }
+ },
+ "zonas": {
+  "total_zonas": 517,
+  "subieron_listados": [
+   {
+    "zona": "Sierras Doradas",
+    "antes": 9,
+    "ahora": 16,
+    "nuevos": 13,
+    "retirados": 6,
+    "delta": 7,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 21533,
+    "mediana_ahora": 25264,
+    "mediana_pct": 17.33
+   },
+   {
+    "zona": "Reparto de Santa Mónica",
+    "antes": 11,
+    "ahora": 15,
+    "nuevos": 4,
+    "retirados": 0,
+    "delta": 4,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 590000,
+    "mediana_ahora": 590000,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Estancia de Santo Domingo",
+    "antes": 6,
+    "ahora": 9,
+    "nuevos": 3,
+    "retirados": 0,
+    "delta": 3,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Sector Sur San Isidro de la Cruz Verde",
+    "antes": 2,
+    "ahora": 5,
+    "nuevos": 2,
+    "retirados": 0,
+    "delta": 3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Las Rosaledas",
+    "antes": 5,
+    "ahora": 8,
+    "nuevos": 2,
+    "retirados": 1,
+    "delta": 3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Motastepe",
+    "antes": 0,
+    "ahora": 3,
+    "nuevos": 3,
+    "retirados": 0,
+    "delta": 3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Ciudad el Doral",
+    "antes": 4,
+    "ahora": 6,
+    "nuevos": 2,
+    "retirados": 0,
+    "delta": 2,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Las Colinas",
+    "antes": 72,
+    "ahora": 74,
+    "nuevos": 10,
+    "retirados": 8,
+    "delta": 2,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 303300,
+    "mediana_ahora": 310800,
+    "mediana_pct": 2.47
+   },
+   {
+    "zona": "Américas No. 3",
+    "antes": 1,
+    "ahora": 3,
+    "nuevos": 3,
+    "retirados": 1,
+    "delta": 2,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Hogar Propio",
+    "antes": 3,
+    "ahora": 5,
+    "nuevos": 2,
+    "retirados": 0,
+    "delta": 2,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   }
+  ],
+  "bajaron_listados": [
+   {
+    "zona": "Villa Fontana Sur",
+    "antes": 77,
+    "ahora": 64,
+    "nuevos": 5,
+    "retirados": 17,
+    "delta": -13,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 270000,
+    "mediana_ahora": 276260,
+    "mediana_pct": 2.32
+   },
+   {
+    "zona": "Centro Histórico Cultural",
+    "antes": 104,
+    "ahora": 95,
+    "nuevos": 9,
+    "retirados": 17,
+    "delta": -9,
+    "n_repreciados": 4,
+    "repreciados_pct": 6908.7,
+    "mediana_antes": 255000,
+    "mediana_ahora": 260000,
+    "mediana_pct": 1.96
+   },
+   {
+    "zona": "San Patricio",
+    "antes": 22,
+    "ahora": 15,
+    "nuevos": 3,
+    "retirados": 10,
+    "delta": -7,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 212500,
+    "mediana_ahora": 220000,
+    "mediana_pct": 3.53
+   },
+   {
+    "zona": "Barrio Adolfo Reyes",
+    "antes": 14,
+    "ahora": 10,
+    "nuevos": 4,
+    "retirados": 8,
+    "delta": -4,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 100500,
+    "mediana_ahora": 106250,
+    "mediana_pct": 5.72
+   },
+   {
+    "zona": "Ciudad Sandino",
+    "antes": 20,
+    "ahora": 16,
+    "nuevos": 3,
+    "retirados": 7,
+    "delta": -4,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 59000,
+    "mediana_ahora": 64000,
+    "mediana_pct": 8.47
+   },
+   {
+    "zona": "Reparto San Juan",
+    "antes": 20,
+    "ahora": 16,
+    "nuevos": 1,
+    "retirados": 5,
+    "delta": -4,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 250000,
+    "mediana_ahora": 355000,
+    "mediana_pct": 42.0
+   },
+   {
+    "zona": "Santo Domingo",
+    "antes": 130,
+    "ahora": 126,
+    "nuevos": 15,
+    "retirados": 18,
+    "delta": -4,
+    "n_repreciados": 3,
+    "repreciados_pct": 6.38,
+    "mediana_antes": 333000,
+    "mediana_ahora": 325000,
+    "mediana_pct": -2.4
+   },
+   {
+    "zona": "Barrio Benjamín Zeledón",
+    "antes": 33,
+    "ahora": 30,
+    "nuevos": 1,
+    "retirados": 4,
+    "delta": -3,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 140000,
+    "mediana_ahora": 118000,
+    "mediana_pct": -15.71
+   },
+   {
+    "zona": "La Esperanza",
+    "antes": 4,
+    "ahora": 1,
+    "nuevos": 0,
+    "retirados": 3,
+    "delta": -3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   },
+   {
+    "zona": "Valle Santa Rosa",
+    "antes": 6,
+    "ahora": 3,
+    "nuevos": 1,
+    "retirados": 4,
+    "delta": -3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": null,
+    "mediana_ahora": null,
+    "mediana_pct": null
+   }
+  ],
+  "precio_bajo": [
+   {
+    "zona": "Esquipulas",
+    "antes": 24,
+    "ahora": 21,
+    "nuevos": 2,
+    "retirados": 4,
+    "delta": -3,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 160300,
+    "mediana_ahora": 115000,
+    "mediana_pct": -28.26
+   },
+   {
+    "zona": "Barrio Benjamín Zeledón",
+    "antes": 33,
+    "ahora": 30,
+    "nuevos": 1,
+    "retirados": 4,
+    "delta": -3,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 140000,
+    "mediana_ahora": 118000,
+    "mediana_pct": -15.71
+   },
+   {
+    "zona": "Carretera A Veracruz",
+    "antes": 9,
+    "ahora": 8,
+    "nuevos": 0,
+    "retirados": 1,
+    "delta": -1,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 180000,
+    "mediana_ahora": 157500,
+    "mediana_pct": -12.5
+   },
+   {
+    "zona": "Bolonia",
+    "antes": 38,
+    "ahora": 37,
+    "nuevos": 4,
+    "retirados": 5,
+    "delta": -1,
+    "n_repreciados": 3,
+    "repreciados_pct": -19.03,
+    "mediana_antes": 227500,
+    "mediana_ahora": 210000,
+    "mediana_pct": -7.69
+   },
+   {
+    "zona": "Lomas de Guadalupe",
+    "antes": 17,
+    "ahora": 16,
+    "nuevos": 0,
+    "retirados": 0,
+    "delta": -1,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 175000,
+    "mediana_ahora": 162500,
+    "mediana_pct": -7.14
+   },
+   {
+    "zona": "Los Altos de Santo Domingo",
+    "antes": 12,
+    "ahora": 13,
+    "nuevos": 2,
+    "retirados": 1,
+    "delta": 1,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 405000,
+    "mediana_ahora": 380000,
+    "mediana_pct": -6.17
+   },
+   {
+    "zona": "Veracruz",
+    "antes": 22,
+    "ahora": 22,
+    "nuevos": 2,
+    "retirados": 2,
+    "delta": 0,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 87500,
+    "mediana_ahora": 82500,
+    "mediana_pct": -5.71
+   },
+   {
+    "zona": "Villas de San Martin",
+    "antes": 10,
+    "ahora": 10,
+    "nuevos": 1,
+    "retirados": 1,
+    "delta": 0,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 96150,
+    "mediana_ahora": 92000,
+    "mediana_pct": -4.32
+   }
+  ],
+  "precio_alto": [
+   {
+    "zona": "Reparto San Juan",
+    "antes": 20,
+    "ahora": 16,
+    "nuevos": 1,
+    "retirados": 5,
+    "delta": -4,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 250000,
+    "mediana_ahora": 355000,
+    "mediana_pct": 42.0
+   },
+   {
+    "zona": "Sierras Doradas",
+    "antes": 9,
+    "ahora": 16,
+    "nuevos": 13,
+    "retirados": 6,
+    "delta": 7,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 21533,
+    "mediana_ahora": 25264,
+    "mediana_pct": 17.33
+   },
+   {
+    "zona": "Las Cumbres 2",
+    "antes": 13,
+    "ahora": 13,
+    "nuevos": 1,
+    "retirados": 1,
+    "delta": 0,
+    "n_repreciados": 2,
+    "repreciados_pct": null,
+    "mediana_antes": 270000,
+    "mediana_ahora": 300000,
+    "mediana_pct": 11.11
+   },
+   {
+    "zona": "Ciudad Sandino",
+    "antes": 20,
+    "ahora": 16,
+    "nuevos": 3,
+    "retirados": 7,
+    "delta": -4,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 59000,
+    "mediana_ahora": 64000,
+    "mediana_pct": 8.47
+   },
+   {
+    "zona": "Carretera A Ticuantepe",
+    "antes": 10,
+    "ahora": 11,
+    "nuevos": 1,
+    "retirados": 0,
+    "delta": 1,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 195000,
+    "mediana_ahora": 210000,
+    "mediana_pct": 7.69
+   },
+   {
+    "zona": "Barrio Adolfo Reyes",
+    "antes": 14,
+    "ahora": 10,
+    "nuevos": 4,
+    "retirados": 8,
+    "delta": -4,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 100500,
+    "mediana_ahora": 106250,
+    "mediana_pct": 5.72
+   },
+   {
+    "zona": "Sector Lago",
+    "antes": 10,
+    "ahora": 9,
+    "nuevos": 0,
+    "retirados": 1,
+    "delta": -1,
+    "n_repreciados": 0,
+    "repreciados_pct": null,
+    "mediana_antes": 75850,
+    "mediana_ahora": 79700,
+    "mediana_pct": 5.08
+   },
+   {
+    "zona": "Batahola Sur",
+    "antes": 15,
+    "ahora": 14,
+    "nuevos": 5,
+    "retirados": 4,
+    "delta": -1,
+    "n_repreciados": 1,
+    "repreciados_pct": null,
+    "mediana_antes": 250000,
+    "mediana_ahora": 262500,
+    "mediana_pct": 5.0
+   }
+  ]
+ },
+ "fuentes_crudas": {
+  "antes": "/home/devni/bienes raices/pipeline/datos/_backup_2026-11-21",
+  "ahora": "/home/devni/bienes raices/pipeline/datos"
+ }
+}

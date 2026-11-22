@@ -1,0 +1,216 @@
+{
+ "v": 1,
+ "generado": "2026-11-21T22:48:29",
+ "extracciones": [
+  {
+   "fecha": "2026-09-03",
+   "listados": 1665,
+   "casas": 1030,
+   "mediana": 190000,
+   "promedio": 316714,
+   "por_fuente": {
+    "kw": 677,
+    "qc": 514,
+    "mb": 290,
+    "sv": 17,
+    "dn": 167
+   },
+   "nuevos": null,
+   "retirados": null,
+   "mediana_pct": null,
+   "mediana_pct_cambios": null
+  },
+  {
+   "fecha": "2026-11-21",
+   "listados": 1577,
+   "casas": 954,
+   "mediana": 189000,
+   "promedio": 327094,
+   "por_fuente": {
+    "kw": 623,
+    "qc": 503,
+    "mb": 280,
+    "sv": 18,
+    "dn": 153
+   },
+   "nuevos": 281,
+   "retirados": 369,
+   "mediana_pct": 0.0,
+   "mediana_pct_cambios": -5.88,
+   "pct_cambiaron": 6.4
+  }
+ ],
+ "ultimo_cambio": {
+  "desde": "2026-09-03",
+  "hasta": "2026-11-21",
+  "nuevos": 281,
+  "retirados": 369,
+  "comunes": 1296,
+  "precio": {
+   "con_precio": 1296,
+   "subieron": 18,
+   "bajaron": 65,
+   "iguales": 1213,
+   "cambiaron": 83,
+   "pct_cambiaron": 6.4,
+   "mediana_pct": 0.0,
+   "media_pct": 117.69,
+   "p25_pct": 0.0,
+   "p75_pct": 0.0,
+   "mediana_pct_cambios": -5.88,
+   "media_pct_cambios": 1837.69,
+   "p25_pct_cambios": -10.0,
+   "p75_pct_cambios": -2.44,
+   "mayor_subida": {
+    "id": "kw:2080817606415270",
+    "zona": "Ciudad el Doral",
+    "distrito": "Managua",
+    "antes": 70.0,
+    "despues": 70000.0,
+    "pct": 99900.0
+   },
+   "mayor_bajada": {
+    "id": "dn:dn15107",
+    "zona": "Las Palmas",
+    "distrito": "Distrito III",
+    "antes": 1600059.0,
+    "despues": 800028.0,
+    "pct": -50.0
+   }
+  },
+  "por_fuente": {
+   "kw": {
+    "antes": 677,
+    "ahora": 623,
+    "nuevos": 211,
+    "retirados": 265,
+    "comunes": 412,
+    "subieron": 5,
+    "bajaron": 56,
+    "cambiaron": 61,
+    "mediana_pct": 0.0,
+    "mediana_pct_cambios": -6.67
+   },
+   "qc": {
+    "antes": 514,
+    "ahora": 503,
+    "nuevos": 30,
+    "retirados": 41,
+    "comunes": 473,
+    "subieron": 5,
+    "bajaron": 4,
+    "cambiaron": 9,
+    "mediana_pct": 0.0,
+    "mediana_pct_cambios": 2.38
+   },
+   "mb": {
+    "antes": 290,
+    "ahora": 280,
+    "nuevos": 27,
+    "retirados": 37,
+    "comunes": 253,
+    "subieron": 7,
+    "bajaron": 0,
+    "cambiaron": 7,
+    "mediana_pct": 0.0,
+    "mediana_pct_cambios": 19.35
+   },
+   "sv": {
+    "antes": 17,
+    "ahora": 18,
+    "nuevos": 3,
+    "retirados": 2,
+    "comunes": 15,
+    "subieron": 0,
+    "bajaron": 1,
+    "cambiaron": 1,
+    "mediana_pct": 0.0,
+    "mediana_pct_cambios": -4.08
+   },
+   "dn": {
+    "antes": 167,
+    "ahora": 153,
+    "nuevos": 10,
+    "retirados": 24,
+    "comunes": 143,
+    "subieron": 1,
+    "bajaron": 4,
+    "cambiaron": 5,
+    "mediana_pct": 0.0,
+    "mediana_pct_cambios": -5.26
+   }
+  },
+  "zonas": [
+   {
+    "zona": "Santo Domingo",
+    "nuevos": 15,
+    "retirados": 18,
+    "comunes": 111,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Centro Histórico Cultural",
+    "nuevos": 9,
+    "retirados": 17,
+    "comunes": 86,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Reparto Santa María del Lago",
+    "nuevos": 9,
+    "retirados": 8,
+    "comunes": 76,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Las Colinas",
+    "nuevos": 10,
+    "retirados": 8,
+    "comunes": 64,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Villa Fontana Sur",
+    "nuevos": 5,
+    "retirados": 17,
+    "comunes": 59,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Las Palmas",
+    "nuevos": 4,
+    "retirados": 6,
+    "comunes": 35,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Édgard Lang",
+    "nuevos": 3,
+    "retirados": 3,
+    "comunes": 37,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Bolonia",
+    "nuevos": 4,
+    "retirados": 5,
+    "comunes": 33,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Barrio Benjamín Zeledón",
+    "nuevos": 1,
+    "retirados": 4,
+    "comunes": 29,
+    "mediana_pct": 0.0
+   },
+   {
+    "zona": "Esquipulas",
+    "nuevos": 2,
+    "retirados": 4,
+    "comunes": 19,
+    "mediana_pct": 0.0
+   }
+  ]
+ }
+}
