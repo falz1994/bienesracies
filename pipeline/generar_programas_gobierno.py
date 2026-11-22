@@ -5,11 +5,15 @@ Confidencial (2023-2026). Salida: docs/data/programas_gobierno.json
 """
 import json
 import os
+import sys
 import time
 import urllib.parse
 import urllib.request
 
-CACHE = "geocache_gob.json"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rutas  # noqa: E402
+
+CACHE = rutas.dato("geocache_gob.json")
 UA = "analisis-managua/1.0 (programas gobierno)"
 
 # Coordenadas verificadas con Overpass/OSM y Nominatim (sep 2026). El clúster de Sabana
@@ -75,9 +79,8 @@ def main():
             print(f"  OK: {nombre:45s} → {lat}, {lng} ({precision})")
         else:
             print(f"  PEND: {nombre}")
-    os.makedirs("docs/data", exist_ok=True)
-    os.makedirs("docs/data", exist_ok=True)
-    with open("docs/data/programas_gobierno.json", "w", encoding="utf-8") as f:
+    rutas.PUB.mkdir(parents=True, exist_ok=True)
+    with open(rutas.publicado("programas_gobierno.json"), "w", encoding="utf-8") as f:
         json.dump({"programas": out, "fuentes": FUENTES,
                    "nota": "Ubicaciones por OSM/Nominatim; los proyectos nuevos del clúster "
                            "Sabana Grande usan el ancla de la comarca (±400 m). Villa Esperanza "

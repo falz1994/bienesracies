@@ -1,0 +1,5 @@
+# Extracción y geocodificación: solo biblioteca estándar de Python 3 (sin dependencias).
+# Slides (pipeline/generar_slides.py): requieren Playwright.
+# Si no hay Chromium de Playwright, se puede usar el Chrome del sistema con
+#   CHROME_PATH=/usr/bin/google-chrome python3 pipeline/generar_slides.py
+playwright>=1.40

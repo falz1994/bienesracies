@@ -115,6 +115,13 @@ footer .descargas a:hover{border-color:var(--amarillo)}
 .popup .z{color:#555;font-size:12px}
 #volver{display:none;position:fixed;bottom:24px;right:24px;z-index:900;background:var(--rojo);
   color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+/* Histórico de extracciones */
+.hist-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.hist-kpi .c{background:var(--panel);border:1px solid #1d2740;border-radius:14px;padding:16px}
+.hist-kpi .c b{display:block;font-size:25px;line-height:1.2}
+.hist-kpi .c span{color:var(--gris);font-size:12px}
+.sube{color:var(--verde)}.baja{color:var(--rojo)}.neutro{color:var(--gris)}
+.hist-tabla td:nth-child(n+2),.hist-tabla th:nth-child(n+2){text-align:right}
 </style>
 </head>
 <body>
@@ -123,6 +130,7 @@ footer .descargas a:hover{border-color:var(--amarillo)}
   <a href="#stats">Estadísticas</a>
   <a href="#mapa-sec">Mapa</a>
   <a href="#zonas">Zonas</a>
+  <a href="#historico">Histórico</a>
   <a href="#slides">Slides</a>
   <a href="#metodologia">Metodología</a>
   <a href="#descargas">Descargas</a>
@@ -221,6 +229,27 @@ footer .descargas a:hover{border-color:var(--amarillo)}
       <tbody id="tb-baratas"></tbody></table>
     </div>
   </div>
+</div></section>
+
+<section id="historico"><div class="wrap">
+  <h2>Histórico de <span class="tag">extracciones</span></h2>
+  <p class="sub">Cada refresco guarda un snapshot de todos los listados. Con eso se mide cuántos anuncios
+  desaparecieron, cuántos son nuevos y en qué porcentaje se movieron los precios de las propiedades que
+  siguen publicadas en el mismo portal.</p>
+  <div class="hist-kpi" id="histKpis"></div>
+  <div class="zonas-col">
+    <div class="tabla hist-tabla"><h3><span class="amarillo">Serie de extracciones</span></h3>
+      <table><thead><tr><th>Fecha</th><th>Listados</th><th>Casas</th><th>Mediana</th><th>Δ precio*</th></tr></thead>
+      <tbody id="tb-hist"></tbody></table>
+    </div>
+    <div class="tabla hist-tabla"><h3>Altas y bajas por portal</h3>
+      <table><thead><tr><th>Portal</th><th>Antes</th><th>Ahora</th><th>Nuevos</th><th>Retirados</th></tr></thead>
+      <tbody id="tb-hist-fuentes"></tbody></table>
+    </div>
+  </div>
+  <p class="sub" id="histNota" style="margin-top:14px"></p>
+  <p class="sub" style="margin-top:6px;font-size:12px">* Variación mediana de precio entre los
+  anuncios que siguen publicados en el mismo portal y que efectivamente cambiaron de precio.</p>
 </div></section>
 
 <section id="slides"><div class="wrap">
@@ -709,7 +738,62 @@ async function cargar() {
 window.addEventListener('scroll', () => {
   document.getElementById('volver').style.display = window.scrollY > 600 ? 'block' : 'none';
 });
+// ---------- histórico de extracciones ----------
+const NOMBRE_FUENTE = {kw:'KW', qc:'QuieroCasa', mb:'Momotombo', sv:'Sovinic', dn:'Discover'};
+const pctTxt = p => p == null ? '—' : (p >= 0 ? '+' : '') + p.toFixed(2) + '%';
+const clasePct = p => p == null ? 'neutro' : p > 0.5 ? 'sube' : p < -0.5 ? 'baja' : 'neutro';
+
+function renderHistorico(h) {
+  const ex = h.extracciones || [];
+  if (!ex.length) return;
+  const ult = ex[ex.length - 1], ant = ex.length > 1 ? ex[ex.length - 2] : null;
+  const uc = h.ultimo_cambio || {}, cp = uc.precio || {};
+  const dN = ant ? ult.listados - ant.listados : null;
+  const kpi = (valor, etiqueta, clase, nota) =>
+    `<div class="c"><b class="${clase || ''}">${valor}</b><span>${etiqueta}</span>` +
+    (nota ? `<span style="display:block;margin-top:5px">${nota}</span>` : '') + `</div>`;
+  document.getElementById('histKpis').innerHTML =
+    kpi(ult.listados.toLocaleString(), 'listados en la última extracción', '',
+        ant ? `${dN >= 0 ? '+' : ''}${dN} vs. ${ant.fecha}` : '') +
+    kpi(uc.retirados != null ? uc.retirados.toLocaleString() : '—',
+        'anuncios retirados desde la anterior', 'baja') +
+    kpi(uc.nuevos != null ? uc.nuevos.toLocaleString() : '—', 'anuncios nuevos', '') +
+    kpi(cp.mediana_pct_cambios == null ? '—' : pctTxt(cp.mediana_pct_cambios),
+        'variación mediana entre los avisos que cambiaron precio', clasePct(cp.mediana_pct_cambios),
+        cp.con_precio
+          ? `${cp.cambiaron} de ${cp.con_precio} (${cp.pct_cambiaron}%) · ` +
+            `${cp.subieron} subieron · ${cp.bajaron} bajaron`
+          : '');
+
+  document.getElementById('tb-hist').innerHTML = ex.slice().reverse().map(e =>
+    `<tr><td>${e.fecha}</td><td>${e.listados.toLocaleString()}</td>` +
+    `<td>${e.casas != null ? e.casas.toLocaleString() : '—'}</td>` +
+    `<td>${e.mediana ? fmt(e.mediana) : '—'}</td>` +
+    `<td class="${clasePct(e.mediana_pct_cambios)}">` +
+    `${e.mediana_pct_cambios == null ? '—' : pctTxt(e.mediana_pct_cambios)}</td></tr>`
+  ).join('');
+
+  const pf = uc.por_fuente || {};
+  document.getElementById('tb-hist-fuentes').innerHTML = Object.keys(pf).map(f =>
+    `<tr><td><span class="chip ${f}">${NOMBRE_FUENTE[f] || f}</span></td>` +
+    `<td>${pf[f].antes}</td><td>${pf[f].ahora}</td>` +
+    `<td style="color:var(--verde)">+${pf[f].nuevos}</td>` +
+    `<td style="color:var(--rojo)">−${pf[f].retirados}</td></tr>`).join('');
+
+  document.getElementById('histNota').textContent = uc.desde
+    ? `Comparación ${uc.desde} → ${uc.hasta}: ${uc.comunes.toLocaleString()} anuncios siguen ` +
+      `publicados en el mismo portal; la variación se mide solo sobre los que cambiaron de ` +
+      `precio, porque un portal no siempre actualiza el precio de un aviso vigente. ` +
+      `Los "retirados" son avisos que dejaron de aparecer (vendidos o dados de baja) y los ` +
+      `"nuevos", propiedades recién publicadas.`
+    : 'La serie se irá completando con cada refresco de datos.';
+}
+
 cargar();
+fetch('data/historico.json').then(r => r.json()).then(renderHistorico).catch(() => {
+  const s = document.getElementById('historico');
+  if (s) s.style.display = 'none';
+});
 </script>
 </body>
 </html>

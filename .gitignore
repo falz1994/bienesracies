@@ -1,3 +1,9 @@
-geocache*.json
 __pycache__/
 *.pyc
+.vercel/
+
+# datos de trabajo del pipeline (crudos, caches, intermedios, slides sin publicar)
+pipeline/datos/
+
+# caches de geocodificación (no versionar)
+geocache*.json

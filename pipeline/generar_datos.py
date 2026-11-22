@@ -1,7 +1,12 @@
-"""Genera los datos estáticos del sitio (data/*.json) desde el pipeline de análisis.
+"""Genera los datos estáticos del sitio (docs/data/*.json) desde el pipeline de análisis.
 
-Fuentes: KW Nicaragua, QuieroCasa, Momotombo y Sovinic (venta, Managua + Ciudad Sandino + Ticuantepe).
-Uso: python3 generar_datos.py   (requiere los CSVs en /home/devni/analisis bienes raices/)
+Fuentes: KW Nicaragua, QuieroCasa, Momotombo, Sovinic y Discover (venta,
+Managua + Ciudad Sandino + Ticuantepe).
+
+Uso: python3 pipeline/generar_datos.py   (desde cualquier directorio)
+
+Lee los CSVs de trabajo de ``pipeline/datos/``; si alguno no existe (clon limpio)
+lo toma de ``docs/data/``, que es la copia publicada y versionada.
 """
 import csv
 import datetime
@@ -12,11 +17,22 @@ import shutil
 import statistics
 import sys
 
-REPO = os.path.dirname(os.path.abspath(__file__))
-ANALISIS = "/home/devni/analisis bienes raices"
-sys.path.insert(0, ANALISIS)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rutas  # noqa: E402
 
-from clasificador_casas import kw_es_casa, qc_es_casa, mb_es_casa, sv_es_casa, dn_es_casa
+from clasificador_casas import kw_es_casa, qc_es_casa, mb_es_casa, sv_es_casa, dn_es_casa  # noqa: E402
+
+REPO = str(rutas.REPO)
+ANALISIS = str(rutas.DATOS)
+
+# Bootstrap para clones limpios: si falta un CSV/geojson de trabajo pero está
+# publicado en docs/data/, se copia a pipeline/datos/ para poder consolidar.
+rutas.DATOS.mkdir(parents=True, exist_ok=True)
+for _n in rutas.CSVS + rutas.GEOJSONS:
+    _destino = rutas.DATOS / _n
+    _origen = rutas.PUB / _n
+    if not _destino.exists() and _origen.exists():
+        shutil.copy2(_origen, _destino)
 
 MANAGUA_OK = {"managua", "ciudad sandino", "ticuantepe"}
 BBOX = {"s": 11.98, "n": 12.26, "o": -86.48, "e": -86.10}
@@ -266,7 +282,7 @@ def main():
                 "p5": round(ps[int(len(ps) * .05)]), "p95": round(ps[int(len(ps) * .95)])}
     fecha_m = max(os.path.getmtime(f"{ANALISIS}/{n}") for n in
                   ("kw_listados_venta.csv", "quierocasa_venta.csv", "momotombo_venta.csv",
-                   "sovinic_venta.csv"))
+                   "sovinic_venta.csv", "discovernica_venta.csv"))
     stats_json = {"fecha": datetime.date.fromtimestamp(fecha_m).isoformat(),
                   "global": stats(unicos),
                   "casas": stats([x for x in unicos if x["casa"]]),
@@ -302,7 +318,8 @@ def main():
     shutil.copy(f"{ANALISIS}/distritos_managua.geojson", f"{REPO}/docs/data/distritos_managua.geojson")
     if os.path.exists(f"{ANALISIS}/barrios_managua.geojson"):
         shutil.copy(f"{ANALISIS}/barrios_managua.geojson", f"{REPO}/docs/data/barrios_managua.geojson")
-    for png in sorted(os.listdir(f"{ANALISIS}/slides")):
+    for png in (sorted(os.listdir(f"{ANALISIS}/slides"))
+                if os.path.isdir(f"{ANALISIS}/slides") else []):
         if png.endswith(".png"):
             shutil.copy(f"{ANALISIS}/slides/{png}", f"{REPO}/docs/slides/{png}")
     print("data/ y slides/ listos")

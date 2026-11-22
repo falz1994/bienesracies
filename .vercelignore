@@ -1,0 +1,6 @@
+# Con Root Directory = docs/ Vercel solo sube docs/, esto es una red de seguridad
+# para deploys hechos con la CLI desde la raíz del repo.
+pipeline/
+history/
+run.sh
+requirements.txt
